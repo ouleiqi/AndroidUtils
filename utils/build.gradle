@@ -5,7 +5,7 @@ publish {
     userOrg = 'ouleiqi'
     groupId = 'org.tcshare'
     artifactId = 'Utils'
-    publishVersion = '0.0.11' //版本号
+    publishVersion = '0.0.12' //版本号
     desc = 'Android Utils code.'
     website = 'https://github.com/ouleiqi/utils'
 
@@ -49,6 +49,6 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    compile "com.android.support:design:$rootProject.supportLibraryVersion"
+    provided "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    provided "com.android.support:design:$rootProject.supportLibraryVersion"
 }
