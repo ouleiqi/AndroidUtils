@@ -1,4 +1,4 @@
-package org.tcshare.http;
+package org.tcshare.network;
 
 /**
  * Created by FallRain on 2017/5/27.
@@ -13,5 +13,8 @@ public class HttpManager {
             }
         }
         return instance;
+    }
+    private HttpManager(){
+
     }
 }

@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
-
+//gradlew clean build bintrayUpload  -PdryRun=false
 publish {
     userOrg = 'ouleiqi'
     groupId = 'org.tcshare'
@@ -9,8 +9,8 @@ publish {
     desc = 'Android Utils code.'
     website = 'https://github.com/ouleiqi/utils'
 
-    bintrayUser = '' //你的用户名
-    bintrayKey = ''
+    bintrayUser = 'ouleiqi' //你的用户名
+    bintrayKey = '62585cfb1fb68686df110d9a186329394cc61790'
 }
 
 allprojects {
@@ -51,4 +51,6 @@ android {
 dependencies {
     provided "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     provided "com.android.support:design:$rootProject.supportLibraryVersion"
+    provided 'com.squareup.okhttp3:okhttp:3.8.1'
+    provided 'com.google.code.gson:gson:2.7'
 }
