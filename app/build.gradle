@@ -26,4 +26,6 @@ dependencies {
     compile project(path: ':utils')
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+    compile 'com.google.code.gson:gson:2.7'
 }

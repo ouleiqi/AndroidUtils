@@ -102,7 +102,7 @@ public class ApiService {
             try {
                 String str = response.body().string();
                 result = new Gson().fromJson(str, (Class < T > ) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[ 0 ]);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return result;
