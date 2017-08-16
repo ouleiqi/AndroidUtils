@@ -15,15 +15,17 @@ import okhttp3.ResponseBody;
  */
 
 public class AppInterceptor implements okhttp3.Interceptor {
+    private static final String TAG = AppInterceptor.class.getSimpleName();
+
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request req = chain.request();
         Response res = chain.proceed(req);
         try {
-            if(Constant.DEBUG) Log.d("http:", "req:" + req.toString());
+            if(Constant.DEBUG) Log.d(TAG, "req:" + req.toString());
             ResponseBody copyRes = res.peekBody(Long.MAX_VALUE);
             String resStr = copyRes.string();
-            if(Constant.DEBUG) Log.d("http:", "res:" + resStr);
+            if(Constant.DEBUG) Log.d(TAG, "res:" + resStr);
         } catch (Exception e) {
             e.printStackTrace();
         }

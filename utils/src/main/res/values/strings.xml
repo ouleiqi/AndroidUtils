@@ -10,4 +10,5 @@
     <string name="load_error_retry">加载失败，点击重试！</string>
     <string name="download">下载应用</string>
     <string name="app_not_install">应用未安装</string>
+    <string name="no_write_permission">下载取消，没有写入SD卡的权限!</string>
 </resources>

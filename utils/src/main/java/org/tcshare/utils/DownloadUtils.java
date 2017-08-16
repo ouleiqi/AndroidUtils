@@ -1,5 +1,6 @@
 package org.tcshare.utils;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
@@ -15,6 +16,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -37,6 +40,13 @@ public class DownloadUtils {
         download(url, name, null, null);
     }
     public void download(String url, String name, @Nullable String title,@Nullable String desc) {
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(mContext,R.string.no_write_permission, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
         final String packageName = "com.android.providers.downloads";
         int state = mContext.getPackageManager().getApplicationEnabledSetting(packageName);
         //检测下载管理器是否被禁用

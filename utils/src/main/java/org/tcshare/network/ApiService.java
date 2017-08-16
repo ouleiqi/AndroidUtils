@@ -2,9 +2,11 @@ package org.tcshare.network;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.util.Pair;
 
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.util.Map;
@@ -13,31 +15,34 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Created by FallRain on 2017/5/27.
+ *
+ * 不确定用户提交数据的类型，及方式，只提供 sendRequest 方法.
  */
-
 public class ApiService {
 
     private static OkHttpClient client;
     private static Handler handler = new Handler(Looper.getMainLooper());
 
     /**
-     *
+     * 提供修改client的方法。
      * @param client
      */
-    public static void setClient(OkHttpClient client){
+    public static void setClient(OkHttpClient client) {
         ApiService.client = client;
     }
 
-    public static OkHttpClient getOkHttpClient(){
-        if(client == null){
-            synchronized (ApiService.class){
-                if(client == null){
+    public static OkHttpClient getOkHttpClient() {
+        if (client == null) {
+            synchronized (ApiService.class) {
+                if (client == null) {
                     client = new OkHttpClient.Builder()
                             .connectTimeout(10, TimeUnit.SECONDS)//设置超时时间
                             .readTimeout(30, TimeUnit.SECONDS)//设置读取超时时间
@@ -50,37 +55,28 @@ public class ApiService {
         return client;
     }
 
-    public static Request.Builder getPostRequestBuilder(String targetUrl, Map<String, String> map) {
-        FormBody.Builder builder = new FormBody.Builder();
-        for(Map.Entry<String,String> entry : map.entrySet()){
-            builder.add(entry.getKey(),entry.getValue());
-        }
-        return new Request.Builder()
-                .url(targetUrl)
-                .post(builder.build());
-    }
-
-    public static void postRequest(Request request, Callback callback) {
+    public static void sendRequest(Request request, Callback callback) {
         getOkHttpClient().newCall(request).enqueue(callback);
     }
 
-    public static void postRequest(Request request, MyCallBack callback) {
+    public static void sendRequest(Request request, MyCallBack callback) {
         getOkHttpClient().newCall(request).enqueue(callback);
     }
 
-    public abstract static class MyCallBack<T> implements Callback {
+    public static class MyCallBack<T> implements Callback {
         @Override
         public void onFailure(Call call, IOException e) {
             nextUI(call, e);
         }
+
         @Override
         public void onResponse(Call call, Response response) throws IOException {
-            T obj =  processResponce(call, response);
+            T obj = processResponce(call, response);
             nextUI(call, obj);
 
         }
 
-        protected void nextUI(final Call call, final IOException e){
+        protected void nextUI(final Call call, final IOException e) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -88,7 +84,8 @@ public class ApiService {
                 }
             });
         }
-        protected void nextUI(final Call call, final T response){
+
+        protected void nextUI(final Call call, final T response) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -97,20 +94,23 @@ public class ApiService {
             });
 
         }
-        protected T processResponce(Call call, Response response){
+
+        protected T processResponce(Call call, Response response) {
             T result = null;
             try {
                 String str = response.body().string();
-                result = new Gson().fromJson(str, (Class < T > ) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[ 0 ]);
+                result = new Gson().fromJson(str, (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return result;
         }
-        public void onFailureUI(Call call, IOException e){
+
+        public void onFailureUI(Call call, IOException e) {
             e.printStackTrace();
         }
-        public void  onResponseUI(Call call, T processObj){
+
+        public void onResponseUI(Call call, T processObj) {
 
         }
     }
