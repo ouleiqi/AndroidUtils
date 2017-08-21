@@ -39,7 +39,7 @@ public class SplashActivity extends AppCompatActivity implements Observer {
                     handler.sendEmptyMessageDelayed(SCALE_SPLASH, 5);
                 }
             } else if (msg.what == END_SPLASH) {
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                startActivity(new Intent(SplashActivity.this, NormalActivity.class));
                 finish();
             }
         }
