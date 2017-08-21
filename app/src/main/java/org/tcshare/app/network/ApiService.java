@@ -1,4 +1,4 @@
-package org.tcshare.androidutils.network;
+package org.tcshare.app.network;
 
 import org.tcshare.network.BaseApiService;
 

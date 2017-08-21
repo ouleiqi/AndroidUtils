@@ -1,13 +1,11 @@
-package org.tcshare.androidutils.utils;
+package org.tcshare.app.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
-import org.tcshare.androidutils.App;
-
-import java.lang.reflect.ParameterizedType;
+import org.tcshare.app.App;
 
 /**
  * Created by FallRain on 2017/5/19.
