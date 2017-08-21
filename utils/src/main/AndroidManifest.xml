@@ -12,7 +12,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-        <activity android:name=".TCRequestPermissionActivity"
+        <activity android:name="org.tcshare.activity.TCRequestPermissionActivity"
             android:theme="@style/Theme.Transparent"/>
     </application>
 </manifest>

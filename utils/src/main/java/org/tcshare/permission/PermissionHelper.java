@@ -1,6 +1,5 @@
 package org.tcshare.permission;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,7 +9,7 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.os.ResultReceiver;
 
-import org.tcshare.utils.TCRequestPermissionActivity;
+import org.tcshare.activity.TCRequestPermissionActivity;
 
 import java.util.Observable;
 

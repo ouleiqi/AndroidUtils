@@ -2,31 +2,24 @@ package org.tcshare.network;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.util.Pair;
 
 import com.google.gson.Gson;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
  *
  * 不确定用户提交数据的类型，及方式，只提供 sendRequest 方法.
  */
-public class ApiService {
+public class BaseApiService {
 
     private static OkHttpClient client;
     private static Handler handler = new Handler(Looper.getMainLooper());
@@ -36,12 +29,12 @@ public class ApiService {
      * @param client
      */
     public static void setClient(OkHttpClient client) {
-        ApiService.client = client;
+        BaseApiService.client = client;
     }
 
     public static OkHttpClient getOkHttpClient() {
         if (client == null) {
-            synchronized (ApiService.class) {
+            synchronized (BaseApiService.class) {
                 if (client == null) {
                     client = new OkHttpClient.Builder()
                             .connectTimeout(10, TimeUnit.SECONDS)//设置超时时间

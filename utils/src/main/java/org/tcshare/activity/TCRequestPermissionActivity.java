@@ -1,4 +1,4 @@
-package org.tcshare.utils;
+package org.tcshare.activity;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
