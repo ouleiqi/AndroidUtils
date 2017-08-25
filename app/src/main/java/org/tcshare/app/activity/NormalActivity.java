@@ -1,5 +1,6 @@
 package org.tcshare.app.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
+import com.google.zxing.client.android.CaptureActivity;
 
 import org.tcshare.app.R;
 import org.tcshare.app.entity.TabEntity;
@@ -79,6 +81,7 @@ public class NormalActivity extends AppCompatActivity implements Observer {
 
         tabLayout.setCurrentTab(0);
         switchFragment(WebViewFragment.newInstance("", ""));
+        startActivity(new Intent(this, CaptureActivity.class));
     }
 
     @Override
@@ -90,6 +93,7 @@ public class NormalActivity extends AppCompatActivity implements Observer {
             finish();
         }
         //super.onBackPressed();
+
     }
 
     @Override
