@@ -22,15 +22,14 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(path: ':utils')
-
     compile 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
-
     // library 依赖 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.squareup.okhttp3:okhttp:$rootProject.okHttpVersion"
     compile "com.google.code.gson:gson:$rootProject.gsonVersion"
     // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    compile files('libs/core-3.3.0.jar')
 }

@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.widget.Toast;
@@ -13,9 +12,9 @@ import android.widget.Toast;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
-import com.google.zxing.client.android.CaptureActivity;
 
 import org.tcshare.app.R;
+import org.tcshare.app.android.CaptureActivity;
 import org.tcshare.app.entity.TabEntity;
 import org.tcshare.fragment.WebViewFragment;
 
@@ -74,6 +73,7 @@ public class NormalActivity extends AppCompatActivity implements Observer {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_normal);
         getWindow().getDecorView().setBackgroundColor(Color.WHITE);
+
 
         CommonTabLayout tabLayout = (CommonTabLayout) findViewById(R.id.tabTitle);
         tabLayout.setTabData(menus);
