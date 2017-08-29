@@ -16,18 +16,20 @@
 
 package org.tcshare.app.android;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -43,6 +45,7 @@ import org.tcshare.app.android.camera.CameraManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * This activity opens the camera and does the actual scanning on a background thread. It draws a
@@ -52,7 +55,7 @@ import java.util.ArrayList;
  * @author dswitkin@google.com (Daniel Switkin)
  * @author Sean Owen
  */
-public class CaptureActivity extends Activity implements SurfaceHolder.Callback {
+public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.Callback {
 
     private static final String TAG = CaptureActivity.class.getSimpleName();
 
@@ -61,19 +64,18 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
     private boolean                hasSurface;
     private BeepManager            beepManager;
     private AmbientLightManager    ambientLightManager;
-    private ViewfinderView         viewfinderView;
-    private SensorEventListener ambientLightListener = new SensorEventListener() {
-        private static final float TOO_DARK_LUX = 45.0f;
-        private static final float BRIGHT_ENOUGH_LUX = 450.0f;
+    private FinderView             finderView;
+    public static final float TOO_DARK_LUX = 45.0f;
+    private float ambientLightLux;
+    private boolean                   currentTorch              = false;
+    private SensorEventListener       ambientLightListener      = new SensorEventListener() {
+
 
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
-
-            float ambientLightLux = sensorEvent.values[0];
-            if (ambientLightLux <= TOO_DARK_LUX) {
-                // cameraManager.setTorch(true);
-            } else if (ambientLightLux >= BRIGHT_ENOUGH_LUX) {
-                // cameraManager.setTorch(false);
+            ambientLightLux = sensorEvent.values[0];
+            if (finderView != null) {
+                finderView.setAmbientLightLux(ambientLightLux);
             }
         }
 
@@ -82,9 +84,35 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
 
         }
     };
+    private View.OnTouchListener      onViewFinderTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            RectF touchRect = new RectF(cameraManager.getFramingRect());
+            if (event.getActionMasked() == MotionEvent.ACTION_DOWN && touchRect.contains(event.getX(), event.getY())) {
+                if (currentTorch) {
+                    cameraManager.setTorch(false);
+                    currentTorch = false;
+                } else if (ambientLightLux <= TOO_DARK_LUX) {
+                    cameraManager.setTorch(true);
+                    currentTorch = true;
+                }
+            }
+            return false;
+        }
+    };
+    private Collection<BarcodeFormat> recogType                 = new ArrayList<BarcodeFormat>() {
+        {
+            addAll(DecodeFormatManager.QR_CODE_FORMATS);
+            addAll(DecodeFormatManager.PRODUCT_FORMATS);
+            addAll(DecodeFormatManager.INDUSTRIAL_FORMATS);
+            addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
+            // addAll(DecodeFormatManager.AZTEC_FORMATS);
+            //addAll(DecodeFormatManager.PDF417_FORMATS);
+        }
+    };
 
-    ViewfinderView getViewfinderView() {
-        return viewfinderView;
+    FinderView getFinderView() {
+        return finderView;
     }
 
     public Handler getHandler() {
@@ -117,9 +145,11 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         // first launch. That led to bugs where the scanning rectangle was the wrong size and partially
         // off screen.
         cameraManager = new CameraManager(getApplication());
-
-        viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
-        viewfinderView.setCameraManager(cameraManager);
+        int width = (int) (getResources().getDisplayMetrics().density * 200);
+        cameraManager.setManualFramingRect(width, width);
+        finderView = (FinderView) findViewById(R.id.viewfinder_view);
+        finderView.setCameraManager(cameraManager);
+        finderView.setOnTouchListener(onViewFinderTouchListener);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 
@@ -193,7 +223,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
             beepManager.playBeepSoundAndVibrate();
             drawResultPoints(barcode, scaleFactor, rawResult);
 
-            viewfinderView.drawResultBitmap(barcode);
+            finderView.drawResultBitmap(barcode);
 
         }
 
@@ -249,16 +279,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
             cameraManager.openDriver(surfaceHolder);
             // Creating the handler starts the preview, which can also throw a RuntimeException.
             if (handler == null) {
-                handler = new CaptureActivityHandler(this, new ArrayList<BarcodeFormat>() {
-                    {
-                        addAll(DecodeFormatManager.PRODUCT_FORMATS);
-                        addAll(DecodeFormatManager.INDUSTRIAL_FORMATS);
-                        addAll(DecodeFormatManager.QR_CODE_FORMATS);
-                        addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
-                        addAll(DecodeFormatManager.AZTEC_FORMATS);
-                        addAll(DecodeFormatManager.PDF417_FORMATS);
-                    }
-                }, null, null, cameraManager);
+                handler = new CaptureActivityHandler(this, recogType, null, null, cameraManager);
             }
         } catch (IOException ioe) {
             Log.w(TAG, ioe);
@@ -288,10 +309,10 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
     }
 
     private void resetStatusView() {
-        viewfinderView.setVisibility(View.VISIBLE);
+        finderView.setVisibility(View.VISIBLE);
     }
 
     public void drawViewfinder() {
-        viewfinderView.drawViewfinder();
+        finderView.drawViewfinder();
     }
 }

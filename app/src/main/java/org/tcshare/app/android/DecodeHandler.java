@@ -18,6 +18,7 @@ package org.tcshare.app.android;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -82,10 +83,12 @@ final class DecodeHandler extends Handler {
 
         Point screenResolution = activity.getCameraManager()
                                          .getScreenResolution();
-        if (screenResolution.x < screenResolution.y) {
+        Rect rectPreview = activity.getCameraManager()
+                                   .getFramingRectInPreview();
+        if (screenResolution.x < screenResolution.y && rectPreview != null) {
             byte[] rotatedData = new byte[data.length];
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++)
+            for (int y = rectPreview.top; y < rectPreview.bottom; y++) {
+                for (int x = rectPreview.left; x < rectPreview.right; x++)
                     rotatedData[x * height + height - y - 1] = data[x + y * width];
             }
             int tmp = width;
@@ -109,12 +112,11 @@ final class DecodeHandler extends Handler {
                 multiFormatReader.reset();
             }
         }
-        Log.e(TAG, "rawResult" + rawResult);
         Handler handler = activity.getHandler();
         if (rawResult != null) {
             // Don't log the barcode contents for security.
             long end = System.currentTimeMillis();
-            Log.e(TAG, "Found barcode in " + (end - start) + " ms");
+            Log.d(TAG, "Found barcode in " + (end - start) + " ms");
             if (handler != null) {
                 Message message = Message.obtain(handler, R.id.decode_succeeded, rawResult);
                 Bundle bundle = new Bundle();

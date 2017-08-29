@@ -31,5 +31,5 @@ dependencies {
     compile "com.squareup.okhttp3:okhttp:$rootProject.okHttpVersion"
     compile "com.google.code.gson:gson:$rootProject.gsonVersion"
     // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    compile files('libs/core-3.3.0.jar')
+    compile 'com.google.zxing:core:3.3.0'
 }

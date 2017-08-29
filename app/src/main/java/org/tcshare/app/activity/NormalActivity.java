@@ -1,10 +1,13 @@
 package org.tcshare.app.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.widget.Toast;
@@ -17,7 +20,10 @@ import org.tcshare.app.R;
 import org.tcshare.app.android.CaptureActivity;
 import org.tcshare.app.entity.TabEntity;
 import org.tcshare.fragment.WebViewFragment;
+import org.tcshare.permission.PermissionHelper;
 
+import java.security.Permission;
+import java.security.Permissions;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -81,7 +87,15 @@ public class NormalActivity extends AppCompatActivity implements Observer {
 
         tabLayout.setCurrentTab(0);
         switchFragment(WebViewFragment.newInstance("", ""));
-        startActivity(new Intent(this, CaptureActivity.class));
+        PermissionHelper.request(this, new String[]{Manifest.permission.CAMERA}, 10, new PermissionHelper.Callback() {
+            @Override
+            public void onResult(int requestCode, String[] permissions, int[] grantResult) {
+                if(grantResult[0] == PackageManager.PERMISSION_GRANTED) {
+                    startActivity(new Intent(NormalActivity.this, CaptureActivity.class));
+                }
+            }
+        });
+
     }
 
     @Override

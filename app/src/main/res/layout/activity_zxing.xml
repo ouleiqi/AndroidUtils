@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
+    <SurfaceView
+        android:id="@+id/preview_view"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent" />
 
-        <SurfaceView
-            android:id="@+id/preview_view"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"/>
+    <org.tcshare.app.android.FinderView
+        android:id="@+id/viewfinder_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        app:text="请将二维码/条码放入框内，即可自动扫描"
+        app:textSize="12dp"
+        app:lightText="轻触照亮"
+        />
 
-        <org.tcshare.app.android.ViewfinderView
-            android:id="@+id/viewfinder_view"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"/>
-
-    </FrameLayout>
-</LinearLayout>
+</FrameLayout>

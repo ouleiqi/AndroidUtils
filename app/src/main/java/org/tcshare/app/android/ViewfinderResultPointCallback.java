@@ -21,10 +21,10 @@ import com.google.zxing.ResultPointCallback;
 
 public final class ViewfinderResultPointCallback implements ResultPointCallback {
 
-  private final ViewfinderView viewfinderView;
+  private final FinderView finderView;
 
-  ViewfinderResultPointCallback(ViewfinderView viewfinderView) {
-    this.viewfinderView = viewfinderView;
+  ViewfinderResultPointCallback(FinderView finderView) {
+    this.finderView = finderView;
   }
 
   @Override

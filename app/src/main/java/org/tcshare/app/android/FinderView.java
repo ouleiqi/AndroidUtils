@@ -19,25 +19,24 @@ package org.tcshare.app.android;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.graphics.Typeface;
+import android.graphics.Xfermode;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-
-import com.google.zxing.ResultPoint;
 
 import org.tcshare.app.R;
 import org.tcshare.app.android.camera.CameraManager;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 
 /**
  * This view is overlaid on top of the camera preview. It adds the viewfinder rectangle and partial
@@ -45,13 +44,15 @@ import java.util.List;
  *
  * @author dswitkin@google.com (Daniel Switkin)
  */
-public final class ViewfinderView extends View {
-
-    private static final long  ANIMATION_DELAY       = 20L; // 1600ms
+public final class FinderView extends View {
+    private static final long  ANIMATION_DELAY       = 40L;
     private static final int   CURRENT_POINT_OPACITY = 0xA0;
-    private final int lineWidth, linLength, lineWidthHalf;
+    private final int lineWidth, lineLength, lineWidthHalf,lineColor;
     private final Bitmap scanLine;
     private final int density;
+    private final int mTextSize,mTextColor;
+    private final String mTextContent;
+    private final String mLightText;
 
 
     private       CameraManager     cameraManager;
@@ -59,12 +60,15 @@ public final class ViewfinderView extends View {
     private       Bitmap            resultBitmap;
     private final int               maskColor;
     private final int               resultColor;
-    private float y = 0f;
+    private float y            = 0f;
     private float moveDistance = -1f;
-    private Rect scanLineRect = new Rect();
+    private Rect  scanLineRect = new Rect();
+    private Rect  textBounds   = new Rect();
+    private float ambientLightLux;
+    private Rect lightTextBounds = new Rect();
 
     // This constructor is used when the class is built from an XML resource.
-    public ViewfinderView(Context context, AttributeSet attrs) {
+    public FinderView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         // Initialize these once for performance rather than calling them every time in onDraw().
@@ -73,11 +77,20 @@ public final class ViewfinderView extends View {
         maskColor = resources.getColor(R.color.viewfinder_mask);
         resultColor = resources.getColor(R.color.result_view);
         density = (int) getResources().getDisplayMetrics().density;
-        lineWidth = density * 3;
-        linLength = density * 20;
-        lineWidthHalf = (int) (lineWidth / 2f);
+
         scanLine = BitmapFactory.decodeResource(getResources(),R.mipmap.scan_line);
 
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.ViewFinder);
+        mTextContent = ta.getString(R.styleable.ViewFinder_text);
+        mLightText = ta.getString(R.styleable.ViewFinder_lightText);
+        mTextSize = ta.getDimensionPixelSize(R.styleable.ViewFinder_textSize, 12*density);
+        mTextColor = ta.getColor(R.styleable.ViewFinder_textColor, Color.WHITE);
+        lineWidth = (int) ta.getDimension(R.styleable.ViewFinder_cornerBorderWidth, 3*density);
+        lineLength = (int) ta.getDimension(R.styleable.ViewFinder_cornerLength, 20*density);
+        lineColor = ta.getColor(R.styleable.ViewFinder_cornerColor,Color.GREEN);
+        lineWidthHalf = (int) (lineWidth / 2f);
+
+        ta.recycle();
     }
 
     public void setCameraManager(CameraManager cameraManager) {
@@ -100,6 +113,7 @@ public final class ViewfinderView extends View {
         int height = canvas.getHeight();
 
         // Draw the exterior (i.e. outside the framing rect) darkened
+        paint.reset();
         paint.setColor(resultBitmap != null ? resultColor : maskColor);
         paint.setStrokeWidth(0);
         paint.setStyle(Paint.Style.FILL);
@@ -109,20 +123,39 @@ public final class ViewfinderView extends View {
         canvas.drawRect(0, frame.bottom + 1, width, height, paint);
 
         // 边角线
-        paint.setColor(Color.GREEN);
+        paint.reset();
+        paint.setColor(lineColor);
         paint.setStrokeWidth(lineWidth);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        canvas.drawLine(frame.left, frame.top + lineWidthHalf, frame.left + linLength, frame.top + lineWidthHalf, paint);
-        canvas.drawLine(frame.right - linLength, frame.top + lineWidthHalf, frame.right, frame.top + lineWidthHalf, paint);
-        canvas.drawLine(frame.left, frame.bottom - lineWidthHalf, frame.left + linLength, frame.bottom - lineWidthHalf, paint);
-        canvas.drawLine(frame.right - linLength, frame.bottom - lineWidthHalf, frame.right, frame.bottom - lineWidthHalf, paint);
+        canvas.drawLine(frame.left, frame.top + lineWidthHalf, frame.left + lineLength, frame.top + lineWidthHalf, paint);
+        canvas.drawLine(frame.right - lineLength, frame.top + lineWidthHalf, frame.right, frame.top + lineWidthHalf, paint);
+        canvas.drawLine(frame.left, frame.bottom - lineWidthHalf, frame.left + lineLength, frame.bottom - lineWidthHalf, paint);
+        canvas.drawLine(frame.right - lineLength, frame.bottom - lineWidthHalf, frame.right, frame.bottom - lineWidthHalf, paint);
 
-        canvas.drawLine(frame.left+lineWidthHalf, frame.top, frame.left+lineWidthHalf, frame.top+linLength, paint);
-        canvas.drawLine(frame.right-lineWidthHalf, frame.top, frame.right-lineWidthHalf, frame.top+linLength, paint);
-        canvas.drawLine(frame.left+lineWidthHalf, frame.bottom - linLength, frame.left +lineWidthHalf, frame.bottom, paint);
-        canvas.drawLine(frame.right-lineWidthHalf, frame.bottom - linLength, frame.right-lineWidthHalf, frame.bottom, paint);
+        canvas.drawLine(frame.left+lineWidthHalf, frame.top, frame.left+lineWidthHalf, frame.top+ lineLength, paint);
+        canvas.drawLine(frame.right-lineWidthHalf, frame.top, frame.right-lineWidthHalf, frame.top+ lineLength, paint);
+        canvas.drawLine(frame.left+lineWidthHalf, frame.bottom - lineLength, frame.left +lineWidthHalf, frame.bottom, paint);
+        canvas.drawLine(frame.right-lineWidthHalf, frame.bottom - lineLength, frame.right-lineWidthHalf, frame.bottom, paint);
 
+        if(!TextUtils.isEmpty(mTextContent)) {
+            paint.reset();
+            paint.setColor(mTextColor);
+            paint.setFlags(Paint.ANTI_ALIAS_FLAG);
+            paint.setTypeface(Typeface.DEFAULT);
+            paint.setTextSize(mTextSize);
+            if(textBounds.isEmpty()) paint.getTextBounds(mTextContent,0, mTextContent.length(), textBounds);
+            canvas.drawText(mTextContent, (frame.right + frame.left - textBounds.width()) / 2f, frame.bottom + textBounds.height() + density * 20, paint);
+        }
 
+        if (!TextUtils.isEmpty(mLightText) && ambientLightLux <= CaptureActivity.TOO_DARK_LUX) {
+            paint.reset();
+            paint.setColor(mTextColor);
+            paint.setFlags(Paint.ANTI_ALIAS_FLAG);
+            paint.setTypeface(Typeface.DEFAULT);
+            paint.setTextSize(mTextSize);
+            if(lightTextBounds.isEmpty()) paint.getTextBounds(mLightText,0, mLightText.length(), lightTextBounds);
+            canvas.drawText(mLightText, (frame.right + frame.left - lightTextBounds.width()) / 2f,frame.bottom - textBounds.height() - density * 20, paint );
+        }
         if (resultBitmap != null) {
             // Draw the opaque result bitmap over the scanning rectangle
             paint.setAlpha(CURRENT_POINT_OPACITY);
@@ -133,7 +166,7 @@ public final class ViewfinderView extends View {
                 y = frame.top + density * 2;
             }else{
                 if(moveDistance < 0){
-                    moveDistance = (frame.bottom - frame.top) / 80;
+                    moveDistance = (frame.bottom - frame.top) / 90f;
                 }
                 y += moveDistance;
             }
@@ -141,10 +174,9 @@ public final class ViewfinderView extends View {
                 scanLineRect.set(frame.left + density * 8,(int)y, frame.right - density * 8, (int) (y + scanLine.getHeight()));
                 canvas.drawBitmap(scanLine,null, scanLineRect, null);
             }else {
-                canvas.drawBitmap(scanLine, (frame.left + frame.right - scanLine.getWidth()) / 2f, y, null);
+                canvas.drawBitmap(scanLine, (frame.left + frame.right - scanLine.getWidth()) / 2f , y, null);
             }
-
-            postInvalidateDelayed(ANIMATION_DELAY);
+            postInvalidateDelayed(ANIMATION_DELAY, frame.left+lineWidth, frame.top+lineWidth, frame.right-lineWidth, frame.bottom-lineWidth);
         }
     }
 
@@ -167,4 +199,7 @@ public final class ViewfinderView extends View {
         invalidate();
     }
 
+    public void setAmbientLightLux(float ambientLightLux) {
+        this.ambientLightLux = ambientLightLux;
+    }
 }
