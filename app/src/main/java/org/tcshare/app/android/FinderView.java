@@ -158,6 +158,7 @@ public final class FinderView extends View {
         }
         if (resultBitmap != null) {
             // Draw the opaque result bitmap over the scanning rectangle
+            paint.reset();
             paint.setAlpha(CURRENT_POINT_OPACITY);
             canvas.drawBitmap(resultBitmap, null, frame, paint);
         } else {

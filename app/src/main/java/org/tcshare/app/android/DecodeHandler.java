@@ -83,12 +83,10 @@ final class DecodeHandler extends Handler {
 
         Point screenResolution = activity.getCameraManager()
                                          .getScreenResolution();
-        Rect rectPreview = activity.getCameraManager()
-                                   .getFramingRectInPreview();
-        if (screenResolution.x < screenResolution.y && rectPreview != null) {
+        if (screenResolution.x < screenResolution.y ) {
             byte[] rotatedData = new byte[data.length];
-            for (int y = rectPreview.top; y < rectPreview.bottom; y++) {
-                for (int x = rectPreview.left; x < rectPreview.right; x++)
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++)
                     rotatedData[x * height + height - y - 1] = data[x + y * width];
             }
             int tmp = width;

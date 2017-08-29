@@ -16,6 +16,7 @@
 
 package org.tcshare.app.android;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -55,7 +56,7 @@ import java.util.Collection;
  * @author dswitkin@google.com (Daniel Switkin)
  * @author Sean Owen
  */
-public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.Callback {
+public class CaptureActivity extends Activity implements SurfaceHolder.Callback {
 
     private static final String TAG = CaptureActivity.class.getSimpleName();
 
@@ -146,7 +147,7 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
         // off screen.
         cameraManager = new CameraManager(getApplication());
         int width = (int) (getResources().getDisplayMetrics().density * 200);
-        cameraManager.setManualFramingRect(width, width);
+       // cameraManager.setManualFramingRect(width, width);
         finderView = (FinderView) findViewById(R.id.viewfinder_view);
         finderView.setCameraManager(cameraManager);
         finderView.setOnTouchListener(onViewFinderTouchListener);
