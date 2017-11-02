@@ -1,6 +1,8 @@
 package org.tcshare.app.network;
 
 import org.tcshare.app.beans.FosungDeviceRegBean;
+import org.tcshare.network.HttpApi;
+import org.tcshare.network.ResponseJSON;
 import org.tcshare.network.RequestBuilderFactory;
 
 import java.util.Map;
@@ -19,13 +21,19 @@ public class FosungDeviceRegPresenter extends Observable {
         Map<String, String> map = FosungNet.initMap("xiangcun.register");
         map = FosungNet.signMap(map);
         map.putAll(info);
-        Request request = RequestBuilderFactory.getPostRequestBuilder("",map).build();
-        ApiService.sendRequest(request, new ApiService.MyCallBack<FosungDeviceRegBean>(){
+        Request request = RequestBuilderFactory.createPostRequestBuilder("",map).build();
+        HttpApi.sendRequest(request, new ResponseJSON<FosungDeviceRegBean>(){
 
             @Override
             public void onResponseUI(Call call, FosungDeviceRegBean processObj) {
                 setChanged();
                 notifyObservers(processObj);
+            }
+        });
+        HttpApi.post("", map, new ResponseJSON<ApiService>() {
+            @Override
+            public void onResponseUI(Call call, ApiService processObj) {
+
             }
         });
     }
