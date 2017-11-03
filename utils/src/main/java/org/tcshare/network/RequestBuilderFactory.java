@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import okhttp3.FormBody;
+import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.Request;
@@ -15,6 +16,16 @@ import okhttp3.RequestBody;
  */
 
 public class RequestBuilderFactory {
+    // 允许修改header
+    private static Headers headers = Headers.of();
+
+    public static Headers getHeaders() {
+        return headers;
+    }
+
+    public static void setHeaders(Headers headers) {
+        RequestBuilderFactory.headers = headers;
+    }
 
     /**
      * 多文件，多个字段
@@ -34,7 +45,7 @@ public class RequestBuilderFactory {
         }
         return new Request.Builder().url(targetUrl)
                                     .tag(UUID.randomUUID())
-                                    .post(builder.build());
+                                    .post(builder.build()).headers(headers);
     }
 
 
@@ -50,7 +61,7 @@ public class RequestBuilderFactory {
         }
         return new Request.Builder().url(targetUrl)
                                     .tag(UUID.randomUUID())
-                                    .post(builder.build());
+                                    .post(builder.build()).headers(headers);
     }
     public static Request.Builder createGetRequestBuilder(String targetUrl, Map<String, String> map) {
         if(map != null) {
@@ -66,13 +77,15 @@ public class RequestBuilderFactory {
         }
         return new Request.Builder().url(targetUrl)
                                     .tag(UUID.randomUUID())
-                                    .get();
+                                    .get().headers(headers);
     }
-    public static Request.Builder createGetRequestBuilder(String targetUrl) {
+    public static Request.Builder createPostJsonRequestBuilder(String targetUrl, String json) {
+        RequestBody jsonBody = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), json);
         return new Request.Builder().url(targetUrl)
                                     .tag(UUID.randomUUID())
-                                    .get();
+                                    .post(jsonBody).header("content-type", "application/json;charset:utf-8").headers(headers);
     }
+
 
 
 }

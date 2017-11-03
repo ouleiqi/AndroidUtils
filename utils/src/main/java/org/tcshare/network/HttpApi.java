@@ -1,5 +1,7 @@
 package org.tcshare.network;
 
+import com.google.gson.Gson;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -12,8 +14,10 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Authenticator;
 import okhttp3.Callback;
 import okhttp3.Credentials;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.Route;
 
@@ -43,7 +47,6 @@ public class HttpApi {
                     client = new OkHttpClient.Builder().connectTimeout(CONECT_TIMEOUT, TimeUnit.SECONDS)//设置超时时间
                                                        .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
                                                        .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)//设置写入超时时间
-                                                       .addInterceptor(new AppInterceptor())
                                                        .build();
                 }
             }
@@ -51,31 +54,39 @@ public class HttpApi {
         return client;
     }
 
-    public static OkHttpClient getProxyOkHttpClient(String proxyHost, int proxyPort, final String username, final String password) {
-        if (client == null) {
-            synchronized (HttpApi.class) {
-                if (client == null) {
-                    Authenticator proxyAuthenticator = new Authenticator() {
-                        @Override
-                        public Request authenticate(Route route, Response response) throws IOException {
-                            String credential = Credentials.basic(username, password);
-                            return response.request()
-                                           .newBuilder()
-                                           .header("Proxy-Authorization", credential)
-                                           .build();
-                        }
-                    };
-                    OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(CONECT_TIMEOUT, TimeUnit.SECONDS)//设置超时时间
-                                                                             .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
-                                                                             .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)//设置写入超时时间
-                                                                             .addInterceptor(new AppInterceptor())
-                                                                             .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)))
-                                                                             .proxyAuthenticator(proxyAuthenticator);
-                    client = builder.build();
-                }
+
+    public static OkHttpClient.Builder getProxyAuthBuilder(String proxyHost, int proxyPort, final String username, final String password) {
+        Authenticator proxyAuthenticator = getProxyHeaderAuth(username, password);
+        return new OkHttpClient.Builder().connectTimeout(CONECT_TIMEOUT, TimeUnit.SECONDS)//设置超时时间
+                                                                 .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
+                                                                 .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)//设置写入超时时间
+                                                                 .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)))
+                                                                 .proxyAuthenticator(proxyAuthenticator);
+    }
+
+    public static Authenticator getProxyHeaderAuth(final String username, final String password){
+        return new Authenticator() {
+            @Override
+            public Request authenticate(Route route, Response response) throws IOException {
+                String credential = Credentials.basic(username, password);
+                return response.request()
+                               .newBuilder()
+                               .header("Proxy-Authorization", credential)
+                               .build();
             }
-        }
-        return client;
+        };
+    }
+    public static Authenticator getHeaderAuth(final String username, final String password){
+        return new Authenticator() {
+            @Override
+            public Request authenticate(Route route, Response response) throws IOException {
+                String credential = Credentials.basic(username, password);
+                return response.request()
+                               .newBuilder()
+                               .header("Authorization", credential)
+                               .build();
+            }
+        };
     }
 
     private static Map<String, String> beanToMap(Object bean) {
@@ -134,12 +145,12 @@ public class HttpApi {
         return request.tag();
     }
 
-/*    public static Object sendRequest(Request request, ResponseJSON callback) {
-        callback.beforeStart();
+    public static <T extends AResponse> Object sendRequest(Request request, T callback) {
+        callback.onStart();
         getOkHttpClient().newCall(request)
                          .enqueue(callback);
         return request.tag();
-    }*/
+    }
 
     public static <T extends AResponse> void get(String url, T callBack) {
         get(url, null, callBack);
@@ -172,6 +183,20 @@ public class HttpApi {
         post(url, params, UPLOAD_MULTI_FILE_KEY, fileMap, callBack);
     }
 
+
+
+    public static <T extends AResponse> void postJSON(String url, String json, T callBack) {
+        Request.Builder jsonRequestBuilder = RequestBuilderFactory.createPostJsonRequestBuilder(url, json);
+        sendRequest(jsonRequestBuilder.build(), callBack);
+
+    }
+    public static <T extends AResponse> void postJSON(String url, Object obj, T callBack) {
+       postJSON(url, new Gson().toJson(obj), callBack);
+    }
+
+
+
+
     public static <T extends AResponse> void upload(String url, String fileKey, Map<String, File> fileMap, T callBack) {
         post(url, null, fileKey, fileMap, callBack);
     }
@@ -201,4 +226,5 @@ public class HttpApi {
     public static <T extends AResponse> void upload(String url, File[] file, T callBack) {
         upload(url, UPLOAD_MULTI_FILE_KEY, file, callBack);
     }
+
 }

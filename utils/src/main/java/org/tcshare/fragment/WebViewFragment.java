@@ -20,6 +20,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.tcshare.Constant;
 import org.tcshare.utils.R;
 
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import java.util.Map;
  * 有限加载 url ，没有url 则加载 content
  */
 public class WebViewFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = WebViewFragment.class.getSimpleName();
     protected WebView mWebView;
     protected String url, content;
     private View loading;
@@ -87,7 +89,7 @@ public class WebViewFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
-                Log.e("tmp", "error:" + error);
+                if(Constant.DEBUG) Log.d(TAG, "error:" + error);
                 retry.setVisibility(View.VISIBLE);
                 mWebView.loadData("", "text/html; charset=UTF-8", null);
             }

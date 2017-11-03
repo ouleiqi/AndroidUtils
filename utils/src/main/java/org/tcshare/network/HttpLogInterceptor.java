@@ -14,8 +14,8 @@ import okhttp3.ResponseBody;
  * Created by kaiyim on 2017/7/9 0009.
  */
 
-public class AppInterceptor implements okhttp3.Interceptor {
-    private static final String TAG = AppInterceptor.class.getSimpleName();
+public class HttpLogInterceptor implements okhttp3.Interceptor {
+    private static final String TAG = HttpLogInterceptor.class.getSimpleName();
 
     @Override
     public Response intercept(Chain chain) throws IOException {

@@ -18,7 +18,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/white" />
-
+<Button
+    android:id="@+id/test"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="kkkkkkkkkkaaaaaaaaabkk"/>
         <View
             android:id="@+id/view"
             android:layout_width="match_parent"

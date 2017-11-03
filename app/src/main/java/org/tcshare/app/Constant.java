@@ -5,5 +5,5 @@ package org.tcshare.app;
  */
 
 public class Constant {
-    public static boolean DEBUG = org.tcshare.Constant.DEBUG = false;
+    public static boolean DEBUG = org.tcshare.Constant.DEBUG = true;
 }

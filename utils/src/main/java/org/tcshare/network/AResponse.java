@@ -74,7 +74,7 @@ public abstract class AResponse<T> implements Callback {
 
     }
 
-    public void beforeStart() {
+    public void onStart() {
 
     }
 }

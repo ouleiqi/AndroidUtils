@@ -12,9 +12,9 @@ public class FosungDeviceRegBean {
      * data : {"appkey":"17070711444700000004","appcert":"de444d44d9ede73ae2df6a257be0c908"}
      */
 
-    private int errorcode;
-    private String error;
-    private DataBean data;
+    public int errorcode;
+    public String error;
+    public DataBean data;
 
     public int getErrorcode() {
         return errorcode;
@@ -46,8 +46,8 @@ public class FosungDeviceRegBean {
          * appcert : de444d44d9ede73ae2df6a257be0c908
          */
 
-        private String appkey;
-        private String appcert;
+        public String appkey;
+        public String appcert;
 
         public String getAppkey() {
             return appkey;
