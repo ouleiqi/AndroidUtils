@@ -17,14 +17,14 @@ import okhttp3.ResponseBody;
  * Created by FallRain on 2017/11/2.
  */
 
-public abstract class HttpResponse<T> implements Callback {
+public abstract class AResponse<T> implements Callback {
     protected Handler handler = new Handler(Looper.getMainLooper());
     protected Context ctx;
 
-    public HttpResponse(){
+    public AResponse(){
 
     }
-    public HttpResponse(Context ctx){
+    public AResponse(Context ctx){
         this.ctx = ctx;
     }
 

@@ -23,9 +23,11 @@ import okhttp3.Route;
 public class HttpApi {
 
     private static OkHttpClient client;
-    private static final long CONECT_TIMEOUT= 60; // seconds
-    private static final long READ_TIMEOUT= 90; // seconds
-    private static final long WRITE_TIMEOUT= 300; // seconds
+    private static final long   CONECT_TIMEOUT        = 60; // seconds
+    private static final long   READ_TIMEOUT          = 90; // seconds
+    private static final long   WRITE_TIMEOUT         = 300; // seconds
+    public static final  String UPLOAD_FILE_KEY       = "file";
+    public static final  String UPLOAD_MULTI_FILE_KEY = "file[]";
 
     /**
      * 提供修改client的方法。
@@ -132,51 +134,71 @@ public class HttpApi {
         return request.tag();
     }
 
-    public static Object sendRequest(Request request, ResponseJSON callback) {
+/*    public static Object sendRequest(Request request, ResponseJSON callback) {
         callback.beforeStart();
         getOkHttpClient().newCall(request)
                          .enqueue(callback);
         return request.tag();
+    }*/
+
+    public static <T extends AResponse> void get(String url, T callBack) {
+        get(url, null, callBack);
     }
 
-    public static <T extends HttpResponse> void get(String url, T callBack){
-
-    }
-    public static <T extends HttpResponse> void get(String url, Map<String, String> params, T callBack){
-
-    }
-    public static <T extends HttpResponse> void get(String url, Object params, T callBack){
+    public static <T extends AResponse> void get(String url, Object params, T callBack) {
         get(url, beanToMap(params), callBack);
     }
-    public static <T extends HttpResponse> void post(String url, Object params, T callBack){
+
+    public static <T extends AResponse> void get(String url, Map<String, String> params, T callBack) {
+        Request.Builder getBuilder = RequestBuilderFactory.createGetRequestBuilder(url, params);
+        sendRequest(getBuilder.build(), callBack);
+    }
+
+    public static <T extends AResponse> void post(String url, Object params, T callBack) {
         post(url, beanToMap(params), callBack);
     }
-    public static <T extends HttpResponse> void post(String url, Map<String, String> params, T callBack){
 
+    public static <T extends AResponse> void post(String url, Map<String, String> params, T callBack) {
+        Request.Builder formBuilder = RequestBuilderFactory.createPostRequestBuilder(url, params);
+        sendRequest(formBuilder.build(), callBack);
     }
-    public static <T extends HttpResponse> void postMultiForm(String url, Map<String, String> params,String fileKey, Map<String,File> fileMap, T callBack){
 
+    public static <T extends AResponse> void post(String url, Map<String, String> params, String fileKey, Map<String, File> fileMap, T callBack) {
+        Request.Builder multiFormBuilder = RequestBuilderFactory.createMultiPostRequestBuilder(url, fileKey, params, fileMap);
+        sendRequest(multiFormBuilder.build(), callBack);
     }
-    public static <T extends HttpResponse> void postMultiForm(String url, Map<String, String> params, Map<String,File> fileMap, T callBack){
-        postMultiForm(url, params, "file[]", fileMap, callBack);
-    }
-    public static <T extends HttpResponse> void upload(String url, String fileKey, Map<String, File> fileMap, T callBack){
 
+    public static <T extends AResponse> void post(String url, Map<String, String> params, Map<String, File> fileMap, T callBack) {
+        post(url, params, UPLOAD_MULTI_FILE_KEY, fileMap, callBack);
     }
-    public static <T extends HttpResponse> void upload(String url, String fileKey, File file, T callBack){
 
+    public static <T extends AResponse> void upload(String url, String fileKey, Map<String, File> fileMap, T callBack) {
+        post(url, null, fileKey, fileMap, callBack);
     }
-    public static <T extends HttpResponse> void upload(String url, File file, T callBack){
-        upload(url, "file", file, callBack);
+
+    public static <T extends AResponse> void upload(String url, Map<String, File> fileMap, T callBack) {
+        post(url, null, UPLOAD_MULTI_FILE_KEY, fileMap, callBack);
     }
-    public static <T extends HttpResponse> void upload(String url, String fileKey, File[] file, T callBack){
+
+    public static <T extends AResponse> void upload(String url, String fileKey, File file, T callBack) {
         Map<String, File> map = new HashMap<>();
-        for(File f : file){
+        map.put(fileKey, file);
+        post(url, null, map, callBack);
+    }
+
+    public static <T extends AResponse> void upload(String url, File file, T callBack) {
+        upload(url, UPLOAD_FILE_KEY, file, callBack);
+    }
+
+    public static <T extends AResponse> void upload(String url, String fileKey, File[] file, T callBack) {
+        Map<String, File> map = new HashMap<>();
+        for (File f : file) {
             map.put(f.getName(), f);
         }
         upload(url, fileKey, map, callBack);
     }
-    public static <T extends HttpResponse> void upload(String url,  File[] file, T callBack){
-        upload(url, "file[]", file, callBack);
+
+    public static <T extends AResponse> void upload(String url, File[] file, T callBack) {
+        upload(url, UPLOAD_MULTI_FILE_KEY, file, callBack);
     }
 }

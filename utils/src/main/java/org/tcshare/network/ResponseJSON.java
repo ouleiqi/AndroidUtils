@@ -2,7 +2,6 @@ package org.tcshare.network;
 
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 
 import okhttp3.Call;
@@ -12,7 +11,7 @@ import okhttp3.Response;
  * Created by FallRain on 2017/11/2.
  */
 
-public abstract class ResponseJSON<T> extends HttpResponse<T> {
+public abstract class ResponseJSON<T> extends AResponse<T> {
 
 
     protected T processResponce(Call call, Response response) {

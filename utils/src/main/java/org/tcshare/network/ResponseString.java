@@ -2,8 +2,6 @@ package org.tcshare.network;
 
 import org.tcshare.Constant;
 
-import java.io.IOException;
-
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -11,7 +9,7 @@ import okhttp3.Response;
  * Created by FallRain on 2017/11/2.
  */
 
-public abstract class ResponseString extends HttpResponse<String> {
+public abstract class ResponseString extends AResponse<String> {
 
     @Override
     protected String processResponce(Call call, Response response) {
