@@ -4,14 +4,12 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import org.tcshare.Constant;
+import org.tcshare.utils.BuildConfig;
 
 import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 /**
  * Created by FallRain on 2017/11/2.
@@ -30,7 +28,7 @@ public abstract class AResponse<T> implements Callback {
 
     @Override
     public void onFailure(Call call, IOException e) {
-        if(Constant.DEBUG) e.printStackTrace();
+        if(BuildConfig.DEBUG) e.printStackTrace();
         nextUI(call, e);
     }
 

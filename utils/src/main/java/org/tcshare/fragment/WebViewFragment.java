@@ -20,7 +20,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.tcshare.Constant;
+import org.tcshare.utils.BuildConfig;
 import org.tcshare.utils.R;
 
 import java.util.HashMap;
@@ -89,7 +89,7 @@ public class WebViewFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
-                if(Constant.DEBUG) Log.d(TAG, "error:" + error);
+                if(BuildConfig.DEBUG) Log.d(TAG, "error:" + error);
                 retry.setVisibility(View.VISIBLE);
                 mWebView.loadData("", "text/html; charset=UTF-8", null);
             }

@@ -2,7 +2,7 @@ package org.tcshare.network;
 
 import android.util.Log;
 
-import org.tcshare.Constant;
+import org.tcshare.utils.BuildConfig;
 
 import java.io.IOException;
 
@@ -22,10 +22,10 @@ public class HttpLogInterceptor implements okhttp3.Interceptor {
         Request req = chain.request();
         Response res = chain.proceed(req);
         try {
-            if(Constant.DEBUG) Log.d(TAG, "req:" + req.toString());
+            if(BuildConfig.DEBUG) Log.d(TAG, "req:" + req.toString());
             ResponseBody copyRes = res.peekBody(Long.MAX_VALUE);
             String resStr = copyRes.string();
-            if(Constant.DEBUG) Log.d(TAG, "res:" + resStr);
+            if(BuildConfig.DEBUG) Log.d(TAG, "res:" + resStr);
         } catch (Exception e) {
             e.printStackTrace();
         }

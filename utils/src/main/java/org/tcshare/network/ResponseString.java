@@ -1,6 +1,6 @@
 package org.tcshare.network;
 
-import org.tcshare.Constant;
+import org.tcshare.utils.BuildConfig;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -17,7 +17,7 @@ public abstract class ResponseString extends AResponse<String> {
         try {
             result = response.body().string();
         } catch (Exception e){
-            if(Constant.DEBUG) e.printStackTrace();
+            if(BuildConfig.DEBUG) e.printStackTrace();
         }
         return result;
     }

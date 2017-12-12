@@ -3,22 +3,74 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-    defaultConfig {
-        applicationId "org.tcshare.app"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
-    }
+
     buildTypes {
         release {
             minifyEnabled false
+            buildConfigField "boolean", "IS_DEBUG", "false" // 默认debug, 产品环境会覆盖该值
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            buildConfigField "boolean", "IS_DEBUG", "true"
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
         }
     }
     lintOptions {
         abortOnError false
     }
+
+    // 多渠道打包 -------------->>>>>>>>>start
+    defaultConfig {
+        applicationId "org.tcshare.app"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+
+    }
+    flavorDimensions ""
+    productFlavors {
+        // 所有渠道(如xiaomi)均继承自 defaultConfig
+        tencent {
+        }
+        _360 {
+        }
+        baidu {
+        }
+        xiaomi {
+        }
+        huawei {
+        }
+    }
+
+    //修改输出文件的文件名及位置, studio 3.0 写法
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+                variant.productFlavors.each { flavor ->
+                    def fileName = flavor.name + "_" + buildType.name + "_" + "${defaultConfig.versionCode}" + "_" + "${defaultConfig.versionName}" + "_" + releaseTime() + ".apk"
+                    outputFileName  = fileName
+                }
+        }
+    }
+    // 多渠道打包 --------------<<<<<<<<<<<<<end
+
+    //多渠道文件占位符替换
+    productFlavors.all {
+        //flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]//menifest中使用${UMENG_CHANNEL}
+    }
+}
+
+def releaseTime() {
+    return new Date().format("yyyyMMdd_HHmmss", TimeZone.getTimeZone("UTC"))
+}
+
+//获取Git版本号
+def getGitVersion() {
+    def cmd = 'git rev-list HEAD --count'
+    def gitVersion = cmd.execute().text.trim().toInteger()
+    return gitVersion;
 }
 
 dependencies {

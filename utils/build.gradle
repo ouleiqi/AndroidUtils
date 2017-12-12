@@ -34,7 +34,14 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            buildConfigField "boolean", "IS_DEBUG", "false" // 默认debug, 产品环境会覆盖该值
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            buildConfigField "boolean", "IS_DEBUG", "true"
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
         }
     }
     lintOptions {
