@@ -21,17 +21,19 @@ public class HttpLogInterceptor implements okhttp3.Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request req = chain.request();
-        req.headers().newBuilder().add("abc", new Random().nextDouble() +"").build();
         Response res = chain.proceed(req);
-        res.newBuilder().addHeader("","").build();
-        try {
+        String reqStr = res.networkResponse().request().headers().toString();
+        String resStr = res.headers() .toString();
+        Log.e("reqStr", reqStr);
+        Log.e("resStr", resStr);
+   /*     try {
             if(BuildConfig.DEBUG) Log.d(TAG, "req:" + req.toString());
             ResponseBody copyRes = res.peekBody(Long.MAX_VALUE);
             String resStr = copyRes.string();
             if(BuildConfig.DEBUG) Log.d(TAG, "res:" + resStr);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         return res;
     }
 

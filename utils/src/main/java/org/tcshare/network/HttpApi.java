@@ -2,6 +2,10 @@ package org.tcshare.network;
 
 import com.google.gson.Gson;
 
+import org.tcshare.network.cookie.CookieJarImpl;
+import org.tcshare.network.cookie.MemoryCookieStore;
+import org.tcshare.network.cookie.PersistentCookieStore;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -13,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Authenticator;
 import okhttp3.Callback;
+import okhttp3.CookieJar;
 import okhttp3.Credentials;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -44,6 +49,7 @@ public class HttpApi {
         if (client == null) {
             synchronized (HttpApi.class) {
                 if (client == null) {
+
                     client = new OkHttpClient.Builder().connectTimeout(CONECT_TIMEOUT, TimeUnit.SECONDS)//设置超时时间
                                                        .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
                                                        .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)//设置写入超时时间
