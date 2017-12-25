@@ -1,5 +1,8 @@
 package org.tcshare.app.activity;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,12 +18,14 @@ import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 
 import org.tcshare.app.R;
+import org.tcshare.app.android.CaptureActivity;
 import org.tcshare.app.beans.FosungDeviceRegBean;
 import org.tcshare.app.entity.TabEntity;
 import org.tcshare.app.network.FosungNet;
 import org.tcshare.fragment.WebViewFragment;
 import org.tcshare.network.HttpApi;
 import org.tcshare.network.ResponseString;
+import org.tcshare.permission.PermissionHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -89,14 +94,16 @@ public class NormalActivity extends AppCompatActivity implements Observer {
 
         tabLayout.setCurrentTab(0);
         switchFragment(WebViewFragment.newInstance("", ""));
-  /*      PermissionHelper.request(this, new String[]{Manifest.permission.CAMERA}, 10, new PermissionHelper.Callbac() {
+       PermissionHelper.request(this, new String[]{Manifest.permission.CAMERA}, 10, new PermissionHelper.Callback() {
             @Override
             public void onResult(int requestCode, String[] permissions, int[] grantResult) {
                 if(grantResult[0] == PackageManager.PERMISSION_GRANTED) {
                     startActivity(new Intent(NormalActivity.this, CaptureActivity.class));
+                }else{
+                    Toast.makeText(NormalActivity.this, "需要相机权限", Toast.LENGTH_SHORT).show();
                 }
             }
-        });*/
+        });
 
         findViewById(R.id.test).setOnClickListener(new View.OnClickListener() {
             @Override

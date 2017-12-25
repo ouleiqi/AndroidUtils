@@ -22,7 +22,10 @@ import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import org.tcshare.permission.PermissionHelper;
+
 import java.io.File;
+import java.util.Calendar;
 
 /**
  * Created by dell on 2017/4/7.
@@ -36,61 +39,68 @@ public class DownloadUtils {
     public DownloadUtils(Context context) {
         mContext = context;
     }
+    public void download(String url){
+        download(url, System.currentTimeMillis()+"");
+    }
     public void download(String url, String name){
         download(url, name, null, null);
     }
-    public void download(String url, String name, @Nullable String title,@Nullable String desc) {
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(mContext,R.string.no_write_permission, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-
-        final String packageName = "com.android.providers.downloads";
-        int state = mContext.getPackageManager().getApplicationEnabledSetting(packageName);
-        //检测下载管理器是否被禁用
-        if (state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-                || state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER
-                || state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext).setTitle(R.string.info).setMessage
-                    (R.string.warn_download_manager_disable).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    try {
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        intent.setData(Uri.parse("package:" + packageName));
-                        mContext.startActivity(intent);
-                    } catch (ActivityNotFoundException e) {
-                        Intent intent = new Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
-                        mContext.startActivity(intent);
+    public void download(final String url, final String name, @Nullable final String title,@Nullable final String desc) {
+        PermissionHelper.request(mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 10, new PermissionHelper.Callback() {
+            @Override
+            public void onResult(int requestCode, String[] permissions, int[] grantResult) {
+                if(grantResult[0] == PackageManager.PERMISSION_GRANTED) {
+                    final String packageName = "com.android.providers.downloads";
+                    int state = mContext.getPackageManager().getApplicationEnabledSetting(packageName);
+                    //检测下载管理器是否被禁用
+                    if (state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                            || state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER
+                            || state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext).setTitle(R.string.info).setMessage
+                                (R.string.warn_download_manager_disable).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                try {
+                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    intent.setData(Uri.parse("package:" + packageName));
+                                    mContext.startActivity(intent);
+                                } catch (ActivityNotFoundException e) {
+                                    Intent intent = new Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
+                                    mContext.startActivity(intent);
+                                }
+                            }
+                        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.create().show();
+                    } else {
+                        //正常下载流程
+                        apkName = name;
+                        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                        request.setAllowedOverRoaming(false);
+                        //通知栏显示
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                        request.setTitle(TextUtils.isEmpty(title) ? mContext.getString(R.string.download) : title);
+                        request.setDescription(TextUtils.isEmpty(desc) ? mContext.getString(R.string.downloading ): desc);
+                        request.setVisibleInDownloadsUi(true);
+                        //设置下载的路径
+                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, apkName);
+                        //获取DownloadManager
+                        mDownloadManager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
+                        downloadId = mDownloadManager.enqueue(request);
+                        mContext.registerReceiver(mReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
                     }
+                }else{
+                    Toast.makeText(mContext,R.string.no_write_permission, Toast.LENGTH_SHORT).show();
                 }
-            }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            builder.create().show();
-        } else {
-            //正常下载流程
-            apkName = name;
-            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-            request.setAllowedOverRoaming(false);
-            //通知栏显示
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            request.setTitle(TextUtils.isEmpty(title) ? mContext.getString(R.string.download) : title);
-            request.setDescription(TextUtils.isEmpty(desc) ? mContext.getString(R.string.downloading ): desc);
-            request.setVisibleInDownloadsUi(true);
-            //设置下载的路径
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, apkName);
-            //获取DownloadManager
-            mDownloadManager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
-            downloadId = mDownloadManager.enqueue(request);
-            mContext.registerReceiver(mReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-        }
+            }
+        });
+
+
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {

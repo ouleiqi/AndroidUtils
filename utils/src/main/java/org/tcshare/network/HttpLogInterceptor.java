@@ -5,6 +5,7 @@ import android.util.Log;
 import org.tcshare.utils.BuildConfig;
 
 import java.io.IOException;
+import java.util.Random;
 
 import okhttp3.Request;
 import okhttp3.Response;
@@ -20,7 +21,9 @@ public class HttpLogInterceptor implements okhttp3.Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request req = chain.request();
+        req.headers().newBuilder().add("abc", new Random().nextDouble() +"").build();
         Response res = chain.proceed(req);
+        res.newBuilder().addHeader("","").build();
         try {
             if(BuildConfig.DEBUG) Log.d(TAG, "req:" + req.toString());
             ResponseBody copyRes = res.peekBody(Long.MAX_VALUE);
