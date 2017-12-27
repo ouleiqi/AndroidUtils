@@ -50,7 +50,7 @@ public class PersistentCookieStore implements CookieStore {
     private static final String LOG_TAG            = "PersistentCookieStore";
     private static final String COOKIE_PREFS       = "CookiePrefsFile";
     private static final String COOKIE_NAME_PREFIX = "cookie_";
-
+    private static final String COMMA = ",";
     public PersistentCookieStore(Context context) {
         cookiePrefs = context.getSharedPreferences(COOKIE_PREFS, 0);
         restoreAll();
@@ -132,9 +132,11 @@ public class PersistentCookieStore implements CookieStore {
             String host = entry.getKey();
             StringBuilder sb = new StringBuilder();
             for(Cookie cookie : entry.getValue()) {
-                sb.append(encodeCookie(new SerializableHttpCookie(cookie))).append(",");
+                sb.append(encodeCookie(new SerializableHttpCookie(cookie))).append(COMMA);
             }
-            sb.substring(0, sb.length() - ",".length());
+            if(sb.length() > COMMA.length()) {
+                sb.substring(0, sb.length() - COMMA.length());
+            }
             edit.putString(host, sb.toString());
         }
         edit.apply();
@@ -144,10 +146,11 @@ public class PersistentCookieStore implements CookieStore {
         for(Map.Entry<String,String> entry : map.entrySet()){
             List<Cookie> cookies = new ArrayList<>();
             if(entry.getValue() != null){
-                List<String> cookieStr = Arrays.asList(entry.getValue().split(","));
+                List<String> cookieStr = Arrays.asList(entry.getValue().split(COMMA));
                 for(String cStr : cookieStr){
                     cookies.add(decodeCookie(cStr));
                 }
+
             }
             allCookies.put(entry.getKey(), cookies);
         }
