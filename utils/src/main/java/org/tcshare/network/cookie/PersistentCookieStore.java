@@ -37,13 +37,11 @@ import okhttp3.HttpUrl;
  * </pre>
  * <p>
  * from http://stackoverflow.com/questions/25461792/persistent-cookie-store-using-okhttp-2-on-android
+ *
+ * 做了修改，原文有个bug，当服务端返回多个Set-Cookie的时候， 最后一个Set-Cookie 会覆盖前面两个
  * <p>
  *
- * A persistent cookie store which implements the Apache HttpClient CookieStore interface.
- * Cookies are stored and will persist on the user's device between application sessions since they
- * are serialized and stored in SharedPreferences. Instances of this class are
- * designed to be used with AsyncHttpClient#setCookieStore, but can also be used with a
- * regular old apache HttpClient/HttpContext if you prefer.
+ *
  */
 public class PersistentCookieStore implements CookieStore {
 
@@ -51,6 +49,10 @@ public class PersistentCookieStore implements CookieStore {
     private static final String COOKIE_PREFS       = "CookiePrefsFile";
     private static final String COOKIE_NAME_PREFIX = "cookie_";
     private static final String COMMA = ",";
+
+    protected HashMap<String, List<Cookie>> allCookies = new HashMap<>();
+    protected SharedPreferences      cookiePrefs;
+
     public PersistentCookieStore(Context context) {
         cookiePrefs = context.getSharedPreferences(COOKIE_PREFS, 0);
         restoreAll();
@@ -121,10 +123,6 @@ public class PersistentCookieStore implements CookieStore {
         }
         return data;
     }
-
-//--------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    protected HashMap<String, List<Cookie>> allCookies = new HashMap<>();
-    protected SharedPreferences      cookiePrefs;
 
     public  void saveAll(){
         SharedPreferences.Editor edit = cookiePrefs.edit();
