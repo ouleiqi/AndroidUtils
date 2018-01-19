@@ -18,7 +18,9 @@ package org.tcshare.widgets;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
@@ -139,6 +141,12 @@ public class VerticalItemDecoration extends RecyclerView.ItemDecoration {
             Drawable divider = a.getDrawable(0);
             type(viewType, divider);
             a.recycle();
+            return this;
+        }
+        public Builder typeColor(int viewType, int color, int height) {
+            Drawable transDrawable = new ColorDrawable(color);
+            transDrawable.setBounds(0,0, 2, height);
+            type(viewType, transDrawable);
             return this;
         }
 

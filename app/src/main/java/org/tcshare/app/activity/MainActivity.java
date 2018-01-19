@@ -22,28 +22,6 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        HttpApi.post("http://47.104.110.144/card/api/member/login.do?username=18754151703&password=123", null, new ResponseString() {
-
-            @Override
-            public void onResponseUI(Call call, String processObj) {
-                Log.e("login", processObj);
-                HttpApi.post("http://47.104.110.144/card/api/member/send-code.do?phone=15866799753", null, new ResponseString() {
-
-                    @Override
-                    public void onResponseUI(Call call, String processObj) {
-                        Log.e("send-code", processObj);
-                        HttpApi.post("http://47.104.110.144/card/api/member/register.do?phone=15866799753&password=123123&code=123123", null, new ResponseString() {
-
-                            @Override
-                            public void onResponseUI(Call call, String processObj) {
-                                Log.e("register", processObj);
-                            }
-                        });
-                    }
-                });
-
-            }
-        });
 
     }
 

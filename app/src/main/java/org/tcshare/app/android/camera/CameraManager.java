@@ -17,6 +17,7 @@
 package org.tcshare.app.android.camera;
 
 import android.content.Context;
+import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
@@ -271,6 +272,7 @@ public final class CameraManager {
                 rect.right = rect.right * cameraResolution.y / screenResolution.x;
                 rect.top = rect.top * cameraResolution.x / screenResolution.y;
                 rect.bottom = rect.bottom * cameraResolution.x / screenResolution.y;
+
             } else {
                 rect.left = rect.left * cameraResolution.x / screenResolution.x;
                 rect.right = rect.right * cameraResolution.x / screenResolution.x;

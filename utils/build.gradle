@@ -13,6 +13,13 @@ publish {
     bintrayKey = '62585cfb1fb68686df110d9a186329394cc61790'
 }
 
+/**
+ * API: 62585cfb1fb68686df110d9a186329394cc61790
+ * compile 'org.tcshare:Utils:0.0.1'
+ * gradlew clean build bintrayUpload  -PdryRun=false
+ * gradlew clean build bintrayUpload -PbintrayUser=BINTRAY_USERNAME -PbintrayKey=BINTRAY_KEY -PdryRun=false
+ */
+
 allprojects {
     tasks.withType(Javadoc) {
         options{
