@@ -21,10 +21,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".framwork.amodule.activity.MainActivity">
         </activity>
-        <activity android:name=".activity.NormalActivity"/>
-        <activity android:name=".activity.SplashActivity"
+        <activity android:name=".framwork.amodule.activity.NormalActivity"/>
+        <activity android:name=".framwork.amodule.activity.SplashActivity"
             android:theme="@style/AppTheme.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

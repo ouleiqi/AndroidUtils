@@ -1,4 +1,4 @@
-package org.tcshare.app.activity;
+package org.tcshare.app.framwork.amodule.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

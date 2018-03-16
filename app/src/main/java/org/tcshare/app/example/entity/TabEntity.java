@@ -1,4 +1,4 @@
-package org.tcshare.app.entity;
+package org.tcshare.app.framwork.entity;
 
 import com.flyco.tablayout.listener.CustomTabEntity;
 

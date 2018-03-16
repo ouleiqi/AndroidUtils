@@ -1,6 +1,6 @@
-package org.tcshare.app.network;
+package org.tcshare.app.framwork.network;
 
-import org.tcshare.app.utils.SettingsSPUtils;
+import org.tcshare.app.framwork.utils.SettingsSPUtils;
 import org.tcshare.utils.MD5;
 
 import java.text.SimpleDateFormat;
@@ -13,7 +13,7 @@ import java.util.TreeMap;
  * Created by FallRain on 2017/8/21.
  */
 
-public class FosungNet {
+public class Net {
 
     public static SimpleDateFormat mFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static Map<String, String> initMap(String method){

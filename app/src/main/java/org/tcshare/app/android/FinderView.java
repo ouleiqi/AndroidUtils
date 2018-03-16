@@ -25,18 +25,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.Xfermode;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
 import org.tcshare.app.R;
 import org.tcshare.app.android.camera.CameraManager;
-
-import java.util.Random;
 
 /**
  * This view is overlaid on top of the camera preview. It adds the viewfinder rectangle and partial

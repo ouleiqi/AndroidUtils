@@ -1,4 +1,4 @@
-package org.tcshare.app.utils;
+package org.tcshare.app.framwork.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

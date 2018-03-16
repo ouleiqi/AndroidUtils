@@ -17,7 +17,6 @@
 package org.tcshare.app.android.camera;
 
 import android.content.Context;
-import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;

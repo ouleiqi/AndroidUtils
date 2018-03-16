@@ -1,4 +1,4 @@
-package org.tcshare.app.activity;
+package org.tcshare.app.framwork.amodule.activity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -19,15 +19,14 @@ import com.flyco.tablayout.listener.OnTabSelectListener;
 
 import org.tcshare.app.R;
 import org.tcshare.app.android.CaptureActivity;
-import org.tcshare.app.beans.FosungDeviceRegBean;
-import org.tcshare.app.entity.TabEntity;
-import org.tcshare.app.network.FosungNet;
+import org.tcshare.app.framwork.network.entity.DeviceRegBean;
+import org.tcshare.app.framwork.entity.TabEntity;
+import org.tcshare.app.framwork.network.Net;
 import org.tcshare.fragment.WebViewFragment;
 import org.tcshare.network.HttpApi;
 import org.tcshare.network.ResponseString;
 import org.tcshare.permission.PermissionHelper;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Observable;
@@ -108,8 +107,8 @@ public class NormalActivity extends AppCompatActivity implements Observer {
         findViewById(R.id.test).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Map<String, String> map = FosungNet.initMap("fosung.app.register");
-                map = FosungNet.signMap(map);
+                Map<String, String> map = Net.initMap("fosung.app.register");
+                map = Net.signMap(map);
                 map.put("brand", "aaa");
                 map.put("model", "aaa");
                 map.put("screen_width", "");
@@ -119,10 +118,10 @@ public class NormalActivity extends AppCompatActivity implements Observer {
                 map.put("os_ver", "");
                 map.put("app_ver", "");
                 map.put("ios_type", "0");
-                FosungDeviceRegBean obj = new FosungDeviceRegBean();
+                DeviceRegBean obj = new DeviceRegBean();
                 obj.setError("sdfsdfsfsd");
                 obj.setErrorcode(989889);
-                FosungDeviceRegBean.DataBean dataBean = new FosungDeviceRegBean.DataBean();
+                DeviceRegBean.DataBean dataBean = new DeviceRegBean.DataBean();
                 dataBean.setAppcert("llllllkkkkkkkkkkkkkk");
                 obj.setData(dataBean);
                 String url = "http://192.168.102.195/rest.php";

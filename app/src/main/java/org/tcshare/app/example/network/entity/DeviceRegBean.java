@@ -1,10 +1,10 @@
-package org.tcshare.app.beans;
+package org.tcshare.app.framwork.network.entity;
 
 /**
  * Created by FallRain on 2017/7/7.
  */
 
-public class FosungDeviceRegBean {
+public class DeviceRegBean {
 
     /**
      * errorcode : 1
