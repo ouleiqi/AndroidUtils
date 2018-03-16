@@ -5,7 +5,7 @@ publish {
     userOrg = 'ouleiqi'
     groupId = 'org.tcshare'
     artifactId = 'Utils'
-    publishVersion = '0.0.16' //版本号
+    publishVersion = '0.0.20' //版本号
     desc = 'Android Utils code.'
     website = 'https://github.com/ouleiqi/utils'
 
