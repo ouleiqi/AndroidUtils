@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <org.tcshare.widgets.FavorLayout
+        android:id="@+id/flavorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom">
+
+    </org.tcshare.widgets.FavorLayout>
+
+    <TextView
+        android:id="@+id/ancher"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="42dp"
+        android:layout_marginRight="42dp"
+        android:background="#99999999"
+        android:text="AncherView"/>
+</FrameLayout>

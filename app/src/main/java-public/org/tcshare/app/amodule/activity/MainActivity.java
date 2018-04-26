@@ -22,36 +22,6 @@ import java.security.Permissions;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity{
-    private View.OnClickListener listener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()){
-                case R.id.qrCode:
-                    startActivity(new Intent(MainActivity.this, CaptureActivity.class));
-                    break;
-                case R.id.bottomDialog:
-                    //底部对话框
-                    showBottomListDialog();
-                    break;
-                case R.id.dragExit:
-                    startActivity(new Intent(MainActivity.this, Drag2RightExitActivity.class));
-                    break;
-                case R.id.fragmentContainer:
-                    ContainerActivity.openSelf(MainActivity.this, EmptyFragment.class, "Fragment Container");
-                    break;
-                case R.id.recyclerView:
-                    ContainerActivity.openSelf(MainActivity.this, RVListFragment.class, "recyclerView默认样式");
-                    break;
-                case R.id.recyclerView1:
-                    break;
-                case R.id.permission:
-                    // 请求权限
-                    requestPermissionMethod();
-                    break;
-
-            }
-        }
-    };
 
     private void showBottomListDialog() {
         BottomListDialog.showSimpleDialog(MainActivity.this, new BottomListDialog.OnItemClickListener() {
@@ -89,13 +59,36 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.qrCode).setOnClickListener(listener);
-        findViewById(R.id.bottomDialog).setOnClickListener(listener);
-        findViewById(R.id.dragExit).setOnClickListener(listener);
-        findViewById(R.id.recyclerView).setOnClickListener(listener);
-        findViewById(R.id.fragmentContainer).setOnClickListener(listener);
-        findViewById(R.id.recyclerView1).setOnClickListener(listener);
-        findViewById(R.id.permission).setOnClickListener(listener);
+    }
+
+    public void onItemClick(View view){
+        switch (view.getId()){
+            case R.id.qrCode:
+                startActivity(new Intent(MainActivity.this, CaptureActivity.class));
+                break;
+            case R.id.bottomDialog:
+                //底部对话框
+                showBottomListDialog();
+                break;
+            case R.id.dragExit:
+                startActivity(new Intent(MainActivity.this, Drag2RightExitActivity.class));
+                break;
+            case R.id.fragmentContainer:
+                ContainerActivity.openSelf(MainActivity.this, EmptyFragment.class, "Fragment Container");
+                break;
+            case R.id.recyclerView:
+                ContainerActivity.openSelf(MainActivity.this, RVListFragment.class, "recyclerView默认样式");
+                break;
+            case R.id.recyclerView1:
+                break;
+            case R.id.permission:
+                // 请求权限
+                requestPermissionMethod();
+                break;
+            case R.id.livelike:
+                startActivity(new Intent(MainActivity.this, LiveLikeActivity.class));
+                break;
+        }
     }
 
 }

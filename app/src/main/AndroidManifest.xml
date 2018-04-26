@@ -38,6 +38,10 @@
             android:name=".amodule.activity.ContainerActivity"
             android:theme="@style/AppTheme.NoActionBar.Translucent">
         </activity>
+        <activity
+            android:name=".amodule.activity.LiveLikeActivity"
+            android:theme="@style/AppTheme.NoActionBar.Translucent">
+        </activity>
 
         <!-- utils 模块 -->
         <provider

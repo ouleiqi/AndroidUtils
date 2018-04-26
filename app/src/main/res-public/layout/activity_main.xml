@@ -51,6 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="扫描二维码"
+                    android:onClick="onItemClick"
                     android:textAppearance="@style/TextAppearance.AppCompat"/>
 
                 <Button
@@ -58,6 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="底部分组单选框"
+                    android:onClick="onItemClick"
                     android:textAppearance="@style/TextAppearance.AppCompat"/>
 
                 <Button
@@ -65,6 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Drag2RightExitActivity"
+                    android:onClick="onItemClick"
                     android:textAppearance="@style/TextAppearance.AppCompat"/>
 
                 <Button
@@ -72,6 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="FragmentContainerActivity"
+                    android:onClick="onItemClick"
                     android:textAppearance="@style/TextAppearance.AppCompat"/>
 
                 <Button
@@ -79,6 +83,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="recyclerview 非入侵式上拉刷新，默认上拉view"
+                    android:onClick="onItemClick"
                     android:textAppearance="@style/TextAppearance.AppCompat"/>
 
                 <Button
@@ -86,6 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="recyclerview 非入侵式上拉刷新，自定义上拉view"
+                    android:onClick="onItemClick"
                     android:textAppearance="@style/TextAppearance.AppCompat"/>
 
                 <Button
@@ -93,6 +99,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="动态权限: 一次请求单个/多个权限"
+                    android:onClick="onItemClick"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+                <Button
+                    android:id="@+id/livelike"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="点赞"
+                    android:onClick="onItemClick"
                     android:textAppearance="@style/TextAppearance.AppCompat"/>
 
             </LinearLayout>
