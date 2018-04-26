@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.tcshare.app">
+<manifest package="org.tcshare.app"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
@@ -15,24 +13,44 @@
     <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
     <application
-        android:name="org.tcshare.app.App"
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
-        <activity android:name=".framwork.amodule.activity.MainActivity">
+        android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".amodule.activity.MainActivity">
         </activity>
-        <activity android:name=".framwork.amodule.activity.NormalActivity"/>
-        <activity android:name=".framwork.amodule.activity.SplashActivity"
+        <activity
+            android:name=".amodule.activity.SplashActivity"
             android:theme="@style/AppTheme.FullScreen">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".android.CaptureActivity"/>
+        <activity
+            android:name=".amodule.activity.Drag2RightExitActivity"
+            android:theme="@style/AppTheme.NoActionBar.Translucent">
+        </activity>
+        <activity
+            android:name=".amodule.activity.ContainerActivity"
+            android:theme="@style/AppTheme.NoActionBar.Translucent">
+        </activity>
+
+        <!-- utils 模块 -->
+        <provider
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:name="android.support.v4.content.FileProvider">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+        <activity android:name="org.tcshare.activity.TCRequestPermissionActivity"
+                  android:theme="@style/Theme.Transparent"/>
     </application>
 
 </manifest>

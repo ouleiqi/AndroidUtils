@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/ToolBar"
+                android:layout_width="match_parent"
+                android:background="@color/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                app:contentInsetStart="0dp"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+
+                    android:text="MainActivity"
+                    android:textSize="16dp"/>
+                <!--     <android.support.v7.widget.ActionMenuView
+                         android:id="@+id/action_menu_view"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="right"/>-->
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/qrCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="扫描二维码"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+                <Button
+                    android:id="@+id/bottomDialog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="底部分组单选框"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+                <Button
+                    android:id="@+id/dragExit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Drag2RightExitActivity"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+                <Button
+                    android:id="@+id/fragmentContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="FragmentContainerActivity"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+                <Button
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="recyclerview 非入侵式上拉刷新，默认上拉view"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+                <Button
+                    android:id="@+id/recyclerView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="recyclerview 非入侵式上拉刷新，自定义上拉view"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+                <Button
+                    android:id="@+id/permission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="动态权限: 一次请求单个/多个权限"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+</ScrollView>

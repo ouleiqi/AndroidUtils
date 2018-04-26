@@ -6,11 +6,13 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
             buildConfigField "boolean", "IS_DEBUG", "false" // 默认debug, 产品环境会覆盖该值
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug{
+        debug {
             buildConfigField "boolean", "IS_DEBUG", "true"
             minifyEnabled false
             zipAlignEnabled false
@@ -30,28 +32,14 @@ android {
         versionName rootProject.ext.versionName
 
     }
-    flavorDimensions ""
-    productFlavors {
-        // 所有渠道(如xiaomi)均继承自 defaultConfig
-        tencent {
-        }
-        _360 {
-        }
-        baidu {
-        }
-        xiaomi {
-        }
-        huawei {
-        }
-    }
 
     //修改输出文件的文件名及位置, studio 3.0 写法
     applicationVariants.all { variant ->
         variant.outputs.all {
-                variant.productFlavors.each { flavor ->
-                    def fileName = flavor.name + "_" + buildType.name + "_" + "${defaultConfig.versionCode}" + "_" + "${defaultConfig.versionName}" + "_" + releaseTime() + ".apk"
-                    outputFileName  = fileName
-                }
+            variant.productFlavors.each { flavor ->
+                def fileName = flavor.name + "_" + buildType.name + "_" + "${defaultConfig.versionCode}" + "_" + "${defaultConfig.versionName}" + "_" + releaseTime() + ".apk"
+                outputFileName = fileName
+            }
         }
     }
     // 多渠道打包 --------------<<<<<<<<<<<<<end
@@ -59,6 +47,15 @@ android {
     //多渠道文件占位符替换
     productFlavors.all {
         //flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]//menifest中使用${UMENG_CHANNEL}
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs  =['src/main/java-public','src/main/java-utils']
+            res.srcDirs = ['src/main/res-utils', 'src/main/res-public',]
+            jniLibs.srcDirs = ['src/main/jni-public']
+
+        }
     }
 }
 
@@ -70,18 +67,20 @@ def releaseTime() {
 def getGitVersion() {
     def cmd = 'git rev-list HEAD --count'
     def gitVersion = cmd.execute().text.trim().toInteger()
-    return gitVersion;
+    return gitVersion
 }
 
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(path: ':utils')
-    compile 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
-    // library 依赖 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    compile "com.android.support:design:$rootProject.supportLibraryVersion"
-    compile "com.squareup.okhttp3:okhttp:$rootProject.okHttpVersion"
-    compile "com.google.code.gson:gson:$rootProject.gsonVersion"
+    implementation project(':zxing')
+
+    //  utils library 使用 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:design:$rootProject.supportLibraryVersion"
+    implementation "com.squareup.okhttp3:okhttp:$rootProject.okHttpVersion"
+    implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
     // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    compile 'com.google.zxing:core:3.3.0'
+    //  zxing 提供
+    //  implementation 'com.google.zxing:core:3.3.0'
 }
