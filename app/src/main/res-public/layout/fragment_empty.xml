@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="1. 使用fragmentContainer 添加fragment\n 2.基础布局为Drag2RightExitActivity的ContainerActivity容器\n 3.ContainerActivity使用自定义View 填充 toolbar  "/>
+</FrameLayout>

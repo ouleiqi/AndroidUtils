@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TSCircleImageView">
+        <!-- 定义ts_前缀，避免合并时会出现重名的问题 -->
+        <attr name="ts_border_width" format="dimension" />
+        <attr name="ts_border_color" format="color" />
+    </declare-styleable>
+</resources>
