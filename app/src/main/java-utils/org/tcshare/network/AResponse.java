@@ -27,9 +27,11 @@ public abstract class AResponse<T> implements Callback {
     public AResponse(){
 
     }
-    public AResponse(@NonNull Context ctx){
+    public AResponse(Context ctx){
         this.ctx = ctx;
-        loadingDialog = LoadingDialog.createLoadingDialog(ctx, ctx.getString(R.string.loading));
+        if(ctx != null) {
+            loadingDialog = LoadingDialog.createLoadingDialog(ctx, ctx.getString(R.string.loading));
+        }
     }
 
     @Override

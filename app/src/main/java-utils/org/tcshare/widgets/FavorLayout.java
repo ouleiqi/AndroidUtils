@@ -8,6 +8,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -44,15 +45,16 @@ public class FavorLayout extends RelativeLayout {
     private List<Interpolator> interpolators =  new ArrayList<Interpolator>(){
         {
             add(new LinearInterpolator());
-            add(new AccelerateInterpolator());
+            //add(new AccelerateInterpolator());
             add(new DecelerateInterpolator());
-            //add(new AccelerateDecelerateInterpolator());
+            add(new AccelerateDecelerateInterpolator());
         }
     };
     private PointF startPoint = new PointF();
     private PointF ancherPoint;
     private View ancherView;
     private int favorWidth = -1, favorHeight = -1;
+    private boolean stop = false;
 
 
     public FavorLayout(Context context) {
@@ -107,8 +109,10 @@ public class FavorLayout extends RelativeLayout {
             ancherView.post(new Runnable() {
                 @Override
                 public void run() {
-                    float x = ancherView.getX() + (ancherView.getWidth() - iWidth)/2;
-                    float y = ancherView.getY() +(ancherView.getHeight() - iHeight)/2;
+                    int[] outLocation = new int[2];
+                    ancherView.getLocationOnScreen(outLocation);
+                    float x = outLocation[0] + (ancherView.getWidth() - iWidth)/2;
+                    float y = outLocation[1] +(ancherView.getHeight() - iHeight)/2;
                     ancherPoint = new PointF( x, y);
                 }
             });
@@ -120,6 +124,9 @@ public class FavorLayout extends RelativeLayout {
      * 对外暴露的方法
      */
     public void addFavor() {
+        if(stop){
+            return;
+        }
         ImageView imageView = new ImageView(getContext());
         // 随机选一个
         imageView.setImageDrawable(RandomUtils.getRandomElement(loves));
@@ -132,11 +139,12 @@ public class FavorLayout extends RelativeLayout {
         }
 
         addView(imageView);
-        if(BuildConfig.IS_DEBUG) Log.e(TAG, "addFavor: " + "add后子view数:" + getChildCount());
+        if(BuildConfig.IS_DEBUG) Log.d(TAG, "addFavor: " + "add后子view数:" + getChildCount());
 
         Animator set = getAnimator(imageView);
         set.addListener(new AnimEndListener(imageView));
         set.start();
+
     }
 
     /**
@@ -180,7 +188,7 @@ public class FavorLayout extends RelativeLayout {
 
     private PointF getPointLow() {
         PointF pointF = new PointF();
-        if(ancherView !=null && favorWidth != -1 && favorHeight != -1){
+        if(ancherView !=null && favorWidth != -1 && favorHeight != -1 && ancherPoint != null){
             // 中心点
             float x = ancherPoint.x - getX();
             float y = ancherPoint.y - getY();
@@ -198,7 +206,7 @@ public class FavorLayout extends RelativeLayout {
     }
     private PointF getPointHight() {
         PointF pointF = new PointF();
-        if(ancherView !=null && favorWidth != -1 && favorHeight != -1){
+        if(ancherView !=null && favorWidth != -1 && favorHeight != -1 && ancherPoint != null){
             // 中心点
             float x = ancherPoint.x - getX();
             float y = ancherPoint.y - getY();
@@ -215,7 +223,7 @@ public class FavorLayout extends RelativeLayout {
 
     private PointF getEndPoint() {
         PointF pointF = new PointF();
-        if(ancherView !=null && favorWidth != -1 && favorHeight != -1){
+        if(ancherView !=null && favorWidth != -1 && favorHeight != -1 && ancherPoint != null){
             // 中心点
             float x = ancherPoint.x - getX();
             float y = ancherPoint.y - getY();
@@ -263,6 +271,10 @@ public class FavorLayout extends RelativeLayout {
         this.iHeight =  items.get(0).getIntrinsicHeight();
         startPoint = new PointF((mWidth - iWidth) / 2, mHeight - iHeight);
         resetAncherPoint();
+    }
+
+    public void setStat(boolean stop) {
+        this.stop = stop;
     }
 
 

@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 有限加载 url ，没有url 则加载 content
+ * 优先加载 url ，没有url 则加载 content
  */
 public class WebViewFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = WebViewFragment.class.getSimpleName();

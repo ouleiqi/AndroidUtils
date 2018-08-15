@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * 简单的图片压缩， 仅降低采样率， 可能导致模糊问题（双重采样解决）。
+ * 简单的图片压缩
  * 来自， Android 文档
  */
 public class SimpleImageScaledDown {

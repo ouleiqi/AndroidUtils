@@ -1,6 +1,10 @@
 package org.tcshare.network;
 
+import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
+
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -27,22 +31,32 @@ public class RequestBuilderFactory {
         RequestBuilderFactory.headers = headers;
     }
 
+    private static String  getMimeType(String filePath) {
+        String ext = MimeTypeMap.getFileExtensionFromUrl(filePath.toLowerCase());
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
+    }
     /**
      * 多文件，多个字段
      */
-    public static Request.Builder createMultiPostRequestBuilder(String targetUrl, String fileKey, Map<String, String> map, Map<String, File> files) {
+    public static Request.Builder createMultiPostRequestBuilder(String targetUrl,String formType, String fileKey, Map<String, String> map, List<File> files) {
         MultipartBody.Builder builder = new MultipartBody.Builder();
-        if(files != null && fileKey != null) {
-            for (Map.Entry<String, File> entry : files.entrySet()) {
-                builder.addFormDataPart(fileKey, entry.getValue()
-                                                      .getName(), RequestBody.create(MediaType.parse(entry.getKey()), entry.getKey()));
-            }
-        }
         if(map  != null) {
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 builder.addFormDataPart(entry.getKey(), entry.getValue());
             }
         }
+        if(!TextUtils.isEmpty(formType)) {
+            MediaType contentType = MediaType.parse(formType);
+            if(contentType != null) {
+                builder.setType(contentType);
+            }
+        }
+        if(files != null && fileKey != null) {
+            for(File file : files){
+                builder.addFormDataPart(fileKey, file.getName(), RequestBody.create(MediaType.parse(getMimeType(file.getName())), file));
+            }
+        }
+
         return new Request.Builder().url(targetUrl)
                                     .tag(UUID.randomUUID())
                                     .post(builder.build()).headers(headers);

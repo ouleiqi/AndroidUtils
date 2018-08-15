@@ -43,18 +43,22 @@
             android:theme="@style/AppTheme.NoActionBar.Translucent">
         </activity>
 
-        <!-- utils 模块 -->
+           <!-- utils 模块 -->
         <provider
+            android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
-            android:grantUriPermissions="true"
-            android:name="android.support.v4.content.FileProvider">
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
+                android:resource="@xml/provider_paths"/>
         </provider>
-        <activity android:name="org.tcshare.activity.TCRequestPermissionActivity"
-                  android:theme="@style/Theme.Transparent"/>
+        <activity
+            android:name="org.tcshare.activity.TCRequestPermissionActivity"
+            android:theme="@style/Theme.Transparent"/>
+        <activity
+            android:name="org.tcshare.activity.SelectOnePictureActivity"
+            android:theme="@style/Theme.Transparent"/>
     </application>
 
 </manifest>

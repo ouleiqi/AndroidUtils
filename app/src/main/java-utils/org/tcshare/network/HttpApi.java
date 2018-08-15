@@ -11,7 +11,10 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -180,13 +183,19 @@ public class HttpApi {
         sendRequest(formBuilder.build(), callBack);
     }
 
-    public static <T extends AResponse> void post(String url, Map<String, String> params, String fileKey, Map<String, File> fileMap, T callBack) {
-        Request.Builder multiFormBuilder = RequestBuilderFactory.createMultiPostRequestBuilder(url, fileKey, params, fileMap);
+    public static <T extends AResponse> void post(String url, String formType, Map<String, String> params, String fileKey, List<File> files, T callBack) {
+        Request.Builder multiFormBuilder = RequestBuilderFactory.createMultiPostRequestBuilder(url, formType,fileKey, params, files);
         sendRequest(multiFormBuilder.build(), callBack);
     }
+    public static <T extends AResponse> void post(String url, Map<String, String> params, String fileKey, List<File> files, T callBack) {
+        post(url, "multipart/form-data", params, fileKey, files, callBack);
+    }
 
-    public static <T extends AResponse> void post(String url, Map<String, String> params, Map<String, File> fileMap, T callBack) {
-        post(url, params, UPLOAD_MULTI_FILE_KEY, fileMap, callBack);
+    public static <T extends AResponse> void post(String url, Map<String, String> params, List<File> files, T callBack) {
+        post(url, params, UPLOAD_MULTI_FILE_KEY, files, callBack);
+    }
+    public static <T extends AResponse> void post(String url, Map<String, String> params, File[] files, T callBack) {
+        post(url, params, Arrays.asList(files), callBack);
     }
 
 
@@ -203,18 +212,18 @@ public class HttpApi {
 
 
 
-    public static <T extends AResponse> void upload(String url, String fileKey, Map<String, File> fileMap, T callBack) {
-        post(url, null, fileKey, fileMap, callBack);
+    public static <T extends AResponse> void upload(String url, String fileKey, List<File> files, T callBack) {
+        post(url, null, fileKey, files, callBack);
     }
 
-    public static <T extends AResponse> void upload(String url, Map<String, File> fileMap, T callBack) {
-        post(url, null, UPLOAD_MULTI_FILE_KEY, fileMap, callBack);
+    public static <T extends AResponse> void upload(String url, List<File> files, T callBack) {
+        post(url, null, UPLOAD_MULTI_FILE_KEY, files, callBack);
     }
 
     public static <T extends AResponse> void upload(String url, String fileKey, File file, T callBack) {
-        Map<String, File> map = new HashMap<>();
-        map.put(fileKey, file);
-        post(url, null, map, callBack);
+        List<File> files = new ArrayList<>();
+        files.add(file);
+        post(url, null, files, callBack);
     }
 
     public static <T extends AResponse> void upload(String url, File file, T callBack) {
@@ -222,11 +231,7 @@ public class HttpApi {
     }
 
     public static <T extends AResponse> void upload(String url, String fileKey, File[] file, T callBack) {
-        Map<String, File> map = new HashMap<>();
-        for (File f : file) {
-            map.put(f.getName(), f);
-        }
-        upload(url, fileKey, map, callBack);
+        upload(url, fileKey, file, callBack);
     }
 
     public static <T extends AResponse> void upload(String url, File[] file, T callBack) {
