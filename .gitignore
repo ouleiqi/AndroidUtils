@@ -10,6 +10,7 @@
 /.idea/
 /.idea/caches/
 /.idea/codeStyles/
-/app/.cxx/*
-/app/.cxx/cmake/*
 /app/.cxx/
+/app/.cxx/cmake/
+/.idea/caches/build_file_checksums.ser
+/.idea/modules.xml
