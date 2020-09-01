@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ViewFinder">
+        <attr name="text" format="string"/>
+        <attr name="lightText" format="string"/>
+        <attr name="textSize" format="dimension"/>
+        <attr name="textColor" format="color"/>
+        <attr name="cornerColor" format="color"/>
+        <attr name="cornerBorderWidth" format="dimension"/>
+        <attr name="cornerLength" format="dimension"/>
+
+    </declare-styleable>
+</resources>

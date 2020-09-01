@@ -1,26 +1,31 @@
 <resources>
 
     <!-- App 自定义的主题样式. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="MyAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar"  parent="AppTheme">
+    <style name="MyAppTheme.NoActionBar"  parent="MyAppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
     </style>
-    <style name="AppTheme.FullScreen" parent="AppTheme.NoActionBar">
+    <style name="MyAppTheme.FullScreen" parent="MyAppTheme.NoActionBar">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.Translucent" parent="AppTheme.NoActionBar">
+    <style name="MyAppTheme.NoActionBar.Translucent" parent="MyAppTheme.NoActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="MyAppTheme.FullScreen.Translucent" parent="MyAppTheme.NoActionBar.Translucent">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <!-- toolbar 相关样式 -->
@@ -59,11 +64,11 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="MyAppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="MyAppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AppTheme.AppCompatDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+    <style name="MyAppTheme.AppCompatDialogStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="windowNoTitle">false</item>
     </style>
 </resources>

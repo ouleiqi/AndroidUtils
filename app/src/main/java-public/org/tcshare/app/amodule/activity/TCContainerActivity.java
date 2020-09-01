@@ -3,35 +3,32 @@ package org.tcshare.app.amodule.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.tcshare.app.BuildConfig;
 import org.tcshare.app.R;
 import org.tcshare.widgets.DragLeft2RightExitFrameLayout;
 
 import java.util.List;
 
-public class ContainerActivity extends AppCompatActivity {
-    private static final String TAG              = ContainerActivity.class.getSimpleName();
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+public class TCContainerActivity extends AppCompatActivity {
+    private static final String TAG              = TCContainerActivity.class.getSimpleName();
     private TextView tvTitle;
     private View appBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_container);
+        setContentView(R.layout.activity_tc_container);
 
         setDragExitListener();
         initToolBar();
@@ -89,11 +86,11 @@ public class ContainerActivity extends AppCompatActivity {
                 trans.replace(R.id.frag_container, frag);
                 trans.commit();
             } catch (Exception e) {
-                if(BuildConfig.IS_DEBUG) Log.i(TAG, "Exception in create Fragment Instance!!!!");
+                Log.e(TAG, "Exception in create Fragment Instance!!!!");
             }
 
         } else {
-            if(BuildConfig.IS_DEBUG) Log.i(TAG, "Empty args and do nothing!");
+            Log.e(TAG, "Empty args and do nothing!");
         }
 
     }
@@ -113,7 +110,7 @@ public class ContainerActivity extends AppCompatActivity {
         bundle.putString("fragmentName", frag.getName());
         Intent intent = new Intent();
         intent.putExtra("bundle", bundle);
-        intent.setClass(ctx, ContainerActivity.class);
+        intent.setClass(ctx, TCContainerActivity.class);
         ctx.startActivity(intent);
     }
     /**
@@ -143,10 +140,8 @@ public class ContainerActivity extends AppCompatActivity {
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            switch (view.getId()){
-                case R.id.ic_back:
-                    onBackPressed();
-                    break;
+            if (view.getId() == R.id.ic_back) {
+                onBackPressed();
             }
         }
     };

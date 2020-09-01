@@ -15,10 +15,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
+
+import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -26,7 +25,6 @@ import org.tcshare.app.R;
 import org.tcshare.permission.PermissionHelper;
 
 import java.io.File;
-import java.util.Calendar;
 
 /**
  * Created by dell on 2017/4/7.
@@ -46,7 +44,7 @@ public class DownloadUtils {
     public void download(String url, String name){
         download(url, name, null, null);
     }
-    public void download(final String url, final String name, @Nullable final String title,@Nullable final String desc) {
+    public void download(final String url, final String name, @Nullable final String title, @Nullable final String desc) {
         PermissionHelper.request(mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 10, new PermissionHelper.Callback() {
             @Override
             public void onResult(int requestCode, String[] permissions, int[] grantResult) {

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FAFFF0"
+    android:keepScreenOn="true"
+    android:orientation="vertical"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp" >
+
+    <TextView
+        android:id="@+id/recevieContent"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:inputType="none"
+        android:gravity="top"
+        android:hint="接受到的数据..."
+        android:textColorHint="#000000"
+        android:isScrollContainer="true"
+        android:scrollbarStyle="insideOverlay"
+        android:textColor="#000000"
+        >
+    </TextView>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/sendContent"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:hint="在此输入发送内容"
+            android:textColorHint="#000000"
+            android:textColor="#000000"
+            android:imeOptions="actionSend"
+            >
+        </EditText>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            <CheckBox
+                android:id="@+id/cb_hex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="16进制"
+                android:textColor="#000000" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <CheckBox
+                    android:id="@+id/repeat_check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="自动"
+                    android:textColor="#000000" />
+
+                <EditText
+                    android:id="@+id/timeinterval"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="3"
+                    android:maxLength="9"
+                    android:hint="1000"
+                    android:textColorHint="#000000"
+                    android:singleLine="true"
+                    android:textColor="#000000"
+                    android:inputType="number"
+                    android:digits="0123456789"
+                    android:imeOptions="actionDone"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ms"
+                    android:textColor="#000000" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/sendbtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="发送"
+                android:gravity="center"
+                >
+            </Button>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        >
+        <Button
+            android:id="@+id/clearbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="清空发送内容"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            >
+        </Button>
+        <LinearLayout
+            android:id="@+id/status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/clearbtn"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="S:"
+                android:gravity="center_vertical"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/send_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="6"
+                android:text="0"
+                android:layout_weight="1"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R:"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/rec_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="6"
+                android:layout_weight="1"
+                android:text="0"
+                android:textColor="#000000" />
+            <TextView
+                android:id="@+id/devtextv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:lines="1"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

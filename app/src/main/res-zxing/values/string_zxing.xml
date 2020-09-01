@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="msg_camera_framework_bug">很遗憾，Android 相机出现问题。你可能需要重启设备。</string>
+    <string name="zxing_hint">请将二维码/条码放入框内，即可自动扫描</string>
+    <string name="zxing_touch_light">轻触照亮</string>
+</resources>

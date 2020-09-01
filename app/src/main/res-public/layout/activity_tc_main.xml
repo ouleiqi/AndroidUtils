@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                style="@style/ToolBar"
+                android:layout_width="match_parent"
+                android:background="@color/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                app:contentInsetStart="0dp"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+
+                    android:text="TCMainActivity"
+                    android:textSize="16dp"/>
+                <!--     <android.support.v7.widget.ActionMenuView
+                         android:id="@+id/action_menu_view"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="right"/>-->
+            </com.google.android.material.appbar.MaterialToolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/qrCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="扫描二维码"
+                    android:onClick="onItemClick"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+                <Button
+                    android:id="@+id/bottomDialog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="底部分组单选框"
+                    android:onClick="onItemClick"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+                <Button
+                    android:id="@+id/dragExit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Drag2RightExitActivity"
+                    android:onClick="onItemClick"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+                <Button
+                    android:id="@+id/fragmentContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="FragmentContainerActivity"
+                    android:onClick="onItemClick"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+                <Button
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="recyclerview 非入侵式上拉刷新，默认上拉view"
+                    android:onClick="onItemClick"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+                <Button
+                    android:id="@+id/recyclerView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="recyclerview 非入侵式上拉刷新，自定义上拉view"
+                    android:onClick="onItemClick"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+                <Button
+                    android:id="@+id/permission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="动态权限: 一次请求单个/多个权限"
+                    android:onClick="onItemClick"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+                <Button
+                    android:id="@+id/facePlus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="虹软人脸集成，IR检测活体"
+                    android:onClick="onItemClick"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+                <Button
+                    android:id="@+id/facePlusRGB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="虹软人脸集成,RGB检测活体"
+                    android:onClick="onItemClick"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+                <Button
+                    android:id="@+id/faceManager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="虹软人脸数据导入"
+                    android:onClick="onItemClick"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+                <Button
+                    android:id="@+id/ttsPlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="科大讯飞离线TTS"
+                    android:onClick="onItemClick"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+                <Button
+                    android:id="@+id/livelike"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="点赞"
+                    android:onClick="onItemClick"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+                <Button
+                    android:id="@+id/jsBridge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="jsBridge"
+                    android:onClick="onItemClick"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+                <EditText
+                    android:id="@+id/serialPortText"
+                    android:text="/dev/ttyS4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <EditText
+                    android:id="@+id/serialPortBand"
+                    android:text="115200"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <Button
+                    android:id="@+id/btnSerialPort"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="打开串口"
+                    android:onClick="onItemClick"
+                    android:textAppearance="@style/TextAppearance.AppCompat"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+</ScrollView>

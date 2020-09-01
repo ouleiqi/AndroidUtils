@@ -5,17 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.design.widget.BottomSheetDialog;
 import android.view.View;
 
-import org.tcshare.activity.SelectOnePictureActivity;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import org.tcshare.activity.TCSelectOnePictureActivity;
 import org.tcshare.permission.PermissionHelper;
 import org.tcshare.widgets.BottomListDialog;
-
-import java.io.File;
 
 /**
  * Created by yuxiaohei on 2018/5/2.
@@ -44,17 +42,17 @@ public class SelectOnePicture {
             public void onClick(View view, int pos, BottomSheetDialog dialog) {
                 if(pos == 0 || pos == 1) {
                     Intent intent = new Intent();
-                    intent.putExtra(SelectOnePictureActivity.RESULT_RECEIVER, new ResultReceiver(new Handler()) {
+                    intent.putExtra(TCSelectOnePictureActivity.RESULT_RECEIVER, new ResultReceiver(new Handler()) {
                         @Override
                         protected void onReceiveResult(int resultCode, Bundle resultData) {
                             super.onReceiveResult(resultCode, resultData);
-                            String pic = resultData.getString(SelectOnePictureActivity.SELECT_PICTURE);
+                            String pic = resultData.getString(TCSelectOnePictureActivity.SELECT_PICTURE);
                             callBack.onResult(resultCode, pic);
                         }
                     });
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    intent.setClass(ctx, SelectOnePictureActivity.class);
-                    intent.putExtra(SelectOnePictureActivity.ACT_TYPE, pos);
+                    intent.setClass(ctx, TCSelectOnePictureActivity.class);
+                    intent.putExtra(TCSelectOnePictureActivity.ACT_TYPE, pos);
                     ctx.startActivity(intent);
                 }
                 dialog.dismiss();

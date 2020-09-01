@@ -17,12 +17,14 @@ import android.util.AttributeSet;
 
 import org.tcshare.app.R;
 
+import androidx.appcompat.widget.AppCompatImageView;
+
 
 /**
  * 注意： 如果用glide(或picassa)，加载时，一定要关闭渐变动画(dontAnimate())，否则会出现加载的图片不显示的问题！
  *
  */
-public class CircleImageView extends android.support.v7.widget.AppCompatImageView {
+public class CircleImageView extends AppCompatImageView {
     private static final ScaleType SCALE_TYPE = ScaleType.CENTER_CROP;
 
     private static final Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_8888;

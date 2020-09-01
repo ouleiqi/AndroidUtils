@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import org.tcshare.app.R;
@@ -13,8 +12,10 @@ import org.tcshare.app.R;
 import java.util.Observable;
 import java.util.Observer;
 
+import androidx.appcompat.app.AppCompatActivity;
 
-public class SplashActivity extends AppCompatActivity implements Observer {
+
+public class TCSplashActivity extends AppCompatActivity implements Observer {
     private static final int DISMISS_SPLASH = 1000;
     private static final int SCALE_SPLASH = 1001;
     private static final int END_SPLASH = 1002;
@@ -41,7 +42,7 @@ public class SplashActivity extends AppCompatActivity implements Observer {
                     handler.sendEmptyMessageDelayed(SCALE_SPLASH, 5);
                 }
             } else if (msg.what == END_SPLASH) {
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                startActivity(new Intent(TCSplashActivity.this, TCMainActivity.class));
                 finish();
             }
         }
@@ -52,7 +53,7 @@ public class SplashActivity extends AppCompatActivity implements Observer {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+        setContentView(R.layout.activity_tc_splash);
         splash = findViewById(R.id.splash);
         handler.sendEmptyMessageDelayed(END_SPLASH, 2000);
     }

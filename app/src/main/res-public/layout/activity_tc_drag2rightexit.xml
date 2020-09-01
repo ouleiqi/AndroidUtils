@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.tcshare.widgets.DragLeft2RightExitFrameLayout
+    android:id="@+id/dragExit"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                style="@style/ToolBar"
+                app:title="toolbar title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+               >
+
+           <!--     <android.support.v7.widget.ActionMenuView
+                    android:id="@+id/action_menu_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"/>-->
+            </com.google.android.material.appbar.MaterialToolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="原生toolbar示例 \n 1.拖拽退出activity\n 2.使用toolbar 代替actionbar \n 3. toolbar 配置 "/>
+        </FrameLayout>
+    </LinearLayout>
+</org.tcshare.widgets.DragLeft2RightExitFrameLayout>

@@ -33,6 +33,13 @@ public class RandomUtils {
      */
     public static int getRandomInt(int max) {
         return Math.abs(getRandom().nextInt())%max;
+    }   /**
+     * 获得一个[0,max)之间的浮点数。
+     * @param max
+     * @return
+     */
+    public static float getRandomFloat(float max) {
+        return Math.abs(getRandom().nextFloat())%max;
     }
 
     /**

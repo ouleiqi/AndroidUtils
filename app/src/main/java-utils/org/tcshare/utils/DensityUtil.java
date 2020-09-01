@@ -1,6 +1,8 @@
 package org.tcshare.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
 /**
@@ -26,5 +28,11 @@ public class DensityUtil {
      */
     public static int sp2px(Context ctx,int sp){
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp,ctx.getResources().getDisplayMetrics());
+    }
+
+    public static DisplayMetrics calcScreenSize(Activity ctx) {
+        DisplayMetrics dm = new DisplayMetrics();
+        ctx.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        return dm;
     }
 }

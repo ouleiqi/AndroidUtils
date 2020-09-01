@@ -2,8 +2,6 @@ package org.tcshare.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.tcshare.app.R;
+
+import androidx.annotation.Nullable;
 
 /**
  * Created by yuxiaohei on 2018/4/24.
@@ -41,6 +41,7 @@ public class LoadingDialog {
 
         Dialog loadingDialog = new Dialog(context, R.style.loading_dialog);
         loadingDialog.setCancelable(false);
+        loadingDialog.setCanceledOnTouchOutside(false);
         loadingDialog.setContentView(layout, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT));

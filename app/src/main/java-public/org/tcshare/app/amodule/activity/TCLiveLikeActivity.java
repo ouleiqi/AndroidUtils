@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import org.tcshare.app.R;
@@ -13,7 +12,9 @@ import org.tcshare.widgets.FavorLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LiveLikeActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class TCLiveLikeActivity extends AppCompatActivity {
 
     private FavorLayout favor;
     @SuppressLint("HandlerLeak")
@@ -31,7 +32,7 @@ public class LiveLikeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_live_like);
+        setContentView(R.layout.activity_tc_live_like);
 
         favor = findViewById(R.id.flavorLayout);
         List<Drawable> items = new ArrayList<Drawable>(){
