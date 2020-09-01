@@ -58,6 +58,7 @@ public class TCHomeActivity extends AppCompatActivity {
     private void switchFragment(int id, Fragment fragment) {
         for(int tab : tabs){
             findViewById(tab).setSelected(id == tab);
+
         }
 
         if (fragment == null) return;
