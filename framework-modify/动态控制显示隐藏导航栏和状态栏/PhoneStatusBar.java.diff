@@ -1,0 +1,54 @@
+--- C:/Users/oulei/AppData/Local/Temp/PhoneStatusBar.java-revBASE.svn001.tmp.java	周二 7月 28 10:59:20 2020
++++ C:/workspace/terminal/源码修改备份/修改前/PhoneStatusBar.java	周二 9月  1 11:51:10 2020
+@@ -217,0 +218,2 @@ public class PhoneStatusBar extends BaseStatusBar
++    static final String HIDE_NAVIGATION_BAR = "android.intent.action.HIDE_NAVIGATION_BAR";
++    static final String SHOW_NAVIGATION_BAR = "android.intent.action.SHOW_NAVIGATION_BAR";
+@@ -806 +808 @@ public class PhoneStatusBar extends BaseStatusBar
+-            if (DEBUG) Log.v(TAG, "hasNavigationBar=" + showNav);
++            Log.v(TAG, "hasNavigationBar=" + showNav);
+@@ -1022,0 +1025,2 @@ public class PhoneStatusBar extends BaseStatusBar
++        demoFilter.addAction(HIDE_NAVIGATION_BAR);
++        demoFilter.addAction(SHOW_NAVIGATION_BAR);
+@@ -1517,0 +1522,13 @@ public class PhoneStatusBar extends BaseStatusBar
++    //--------------------------start
++    private void addNavigationBarInnerLocked() {
++        if (mNavigationBarView == null) {
++            createNavigationBarView(mContext);
++            if (mNavigationBarView == null)
++                return;
++            prepareNavigationBarView();
++            try {
++                mWindowManager.addView(mNavigationBarView, getNavigationBarLayoutParams());
++            } catch (Exception e) {
++            }
++        }
++    }
+@@ -1518,0 +1536,15 @@ public class PhoneStatusBar extends BaseStatusBar
++    private void removeNavigationBar() {
++        if (mNavigationBarView == null)
++            return;
++        mWindowManager.removeView(mNavigationBarView);
++        mNavigationBarView = null;
++    }
++
++    public void displayNavigation() {
++        addNavigationBarInnerLocked();
++    }
++
++    public void hideNavigation() {
++        removeNavigationBar();
++    }
++    //--------------------------end
+@@ -3677 +3709 @@ public class PhoneStatusBar extends BaseStatusBar
+-            if (DEBUG) Log.v(TAG, "onReceive: " + intent);
++            Log.v(TAG, "onMyReceive: " + intent);
+@@ -3693,0 +3726 @@ public class PhoneStatusBar extends BaseStatusBar
++
+@@ -3694,0 +3728,5 @@ public class PhoneStatusBar extends BaseStatusBar
++                /*-----------------------------start*/
++            }else if (HIDE_NAVIGATION_BAR.equals(action)) {
++                hideNavigation();
++            } else if (SHOW_NAVIGATION_BAR.equals(action)) {
++                displayNavigation();
+@@ -3695,0 +3734 @@ public class PhoneStatusBar extends BaseStatusBar
++            /*---------------------------------end*/

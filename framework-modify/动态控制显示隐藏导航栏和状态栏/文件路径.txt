@@ -1,0 +1,2 @@
+/home/lsw/workspace/rk3399/sys-source/OK3399-android7-source/frameworks/base/core/res/...mainfest.xml
+/home/lsw/workspace/rk3399/sys-source/OK3399-android7-source/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/*.java

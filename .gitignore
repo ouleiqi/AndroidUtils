@@ -10,3 +10,5 @@
 /.idea/
 /.idea/caches/
 /.idea/codeStyles/
+/app/.cxx/*
+/app/.cxx/cmake/*

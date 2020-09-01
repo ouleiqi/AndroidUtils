@@ -39,6 +39,11 @@ android {
             assets.srcDirs = ['src/main/assets-utils', 'src/main/assets-public']
         }
     }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
 }
 
 

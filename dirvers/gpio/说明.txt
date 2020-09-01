@@ -1,0 +1,5 @@
+使用ioctl 来控制， 测试1ms立即返回发送数据，数据正常；
+文件位置 
+kernel/drivers/char/gpio68.c
+kernel/drivers/char/Makefile 添加编译
+	obj-y				+= gpio68.o

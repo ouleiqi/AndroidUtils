@@ -1,0 +1,7 @@
+--- C:/Users/oulei/AppData/Local/Temp/AndroidManifest.xml-revBASE.svn004.tmp.xml	周二 7月 28 10:59:20 2020
++++ C:/workspace/terminal/源码修改备份/修改前/AndroidManifest.xml	周二 9月  1 11:52:32 2020
+@@ -27,0 +28,4 @@
++    <protected-broadcast android:name="android.intent.action.HIDE_NAVIGATION_BAR" />
++    <protected-broadcast android:name="android.intent.action.SHOW_NAVIGATION_BAR" />
++    <protected-broadcast android:name="android.intent.action.HIDE_STATUS_BAR" />
++    <protected-broadcast android:name="android.intent.action.SHOW_STATUS_BAR" />
