@@ -1,0 +1,55 @@
+commit 8fd40af4155d50d99cb23395cc6225e221886bea
+Author: zzt <1982340778@qq.com>
+Date:   Fri Aug 14 09:28:23 2020 +0000
+
+    OK3399:TypeC0 change to microUSB
+
+diff --git a/kernel/arch/arm64/boot/dts/rockchip/ok3399.dts b/kernel/arch/arm64/boot/dts/rockchip/ok3399.dts
+index e75078c..d32a829 100644
+--- a/kernel/arch/arm64/boot/dts/rockchip/ok3399.dts
++++ b/kernel/arch/arm64/boot/dts/rockchip/ok3399.dts
+@@ -669,7 +669,7 @@
+ 
+ &cdn_dp {
+ 	status = "disabled";
+-	extcon = <&fusb0>;
++	//extcon = <&fusb0>;
+ 	phys = <&tcphy0_dp>;
+ };
+ 
+@@ -1345,13 +1345,14 @@
+ };
+ 
+ &tcphy0 {
+-	extcon = <&fusb0>;
+-	status = "okay";
++	//extcon = <&fusb0>;
++	status = "disabled";
+ };
+ 
+ &u2phy0 {
+ 	status = "okay";
+-	extcon = <&fusb0>;
++	//extcon = <&fusb0>;
++	otg-vbus-gpios = <&gpio3 RK_PC6 GPIO_ACTIVE_HIGH>; /* Vbus GPIO配置，见Note1*/
+ 	u2phy0_otg: otg-port {
+ 		status = "okay";
+ 	};
+@@ -1363,12 +1364,16 @@
+ };
+ 
+ &usbdrd3_0 {
+-	extcon = <&fusb0>;
++	extcon = <&u2phy0>;
+ 	status = "okay";
+ };
+ 
+ &usbdrd_dwc3_0 {
+ 	status = "okay";
++	dr_mode = "otg"; /* Micro USB3控制器的dr_mode配置为otg */
++	maximum-speed = "high-speed"; /* maximum-speed 属性配置为high-speed */
++	phys = <&u2phy0_otg>; /* phys 属性只引用USB2 PHY节点 */
++	phy-names = "usb2-phy";
+ };
+ 
+ &tcphy1 {
