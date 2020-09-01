@@ -1,0 +1,62 @@
+安装应用：
+adb install packagename
+
+列出目标设备中已安装的应用程序包：
+adb shell pm list packages
+相关参数：
+-f：查看关联文件，即应用apk的位置跟对应的包名
+-d：查看disabled packages
+-e：查看enable package
+-s：查看系统package
+-3：查看第三方package
+-i：查看package的对应安装者
+-u：查看曾被卸载过的package。（卸载后又重新安装依然会被列 入）
+–user：The user space to query。
+-----------------------------------------
+输入卸载命令：
+adb uninstall packagename
+--------------------------------------------
+查看Android手机CPU类型是armeabi，armeabi-v7a，还是arm64-v8a
+adb shell getprop ro.product.cpu.abi
+
+----------------------------------
+wm size ，查看分辨率
+
+在真机中，通过setting设置的值都是存在在以下目录下的
+/data/data/com.android.providers.settings/databases/settings.db里，里面有三个表global, system, secure.
+
+可以通常这样查看数据
+
+adb shell sqlite3 data/data/com.android.providers.settings/databases/settings.db "select * from secure"
+1
+但是自从android 6.0以后这几个表都变为了xml文件。具体位置如下：
+
+不同用户放不同的路径下，如果没有创建新用户，则在/data/system/users/0下
+
+settings_global.xml, settings_system.xml, settings_secure.xml
+1
+另外，如果需要在串口或者adb 调试的话，可以直接使用命令是改变这些值
+settings get global 系统属性key
+
+settings put global 系统属性key 系统属性值
+settings list
+
+
+------------------------------------------------------------------------------------------------------
+系统关机重启，广播方式
+     case R.id.shutdown_btn1:
+                Log.v(TAG, "broadcast->shutdown");
+                Intent intent = new Intent(Intent.ACTION_REQUEST_SHUTDOWN);
+                intent.putExtra(Intent.EXTRA_KEY_CONFIRM, false);
+                //其中false换成true,会弹出是否关机的确认窗口
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                break;
+            case R.id.reboot_btn1:
+                Log.v(TAG, "broadcast->reboot");
+                Intent intent2 = new Intent(Intent.ACTION_REBOOT);
+                intent2.putExtra("nowait", 1);
+                intent2.putExtra("interval", 1);
+                intent2.putExtra("window", 0);
+                sendBroadcast(intent2);  
+                break;

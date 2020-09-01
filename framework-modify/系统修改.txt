@@ -96,3 +96,22 @@ PRODUCT_COPY_FILES += \
             Slog.wtf(TAG,"startApp_exception");
         }
 
+
+系统配置
+/home/lsw/workspace/rk3399/sys-source/OK3399-android7-source/frameworks/base/packages/SettingsProvider/res/values
+
+默认语言
+/home/lsw/workspace/rk3399/sys-source/OK3399-android7-source/build/target/product/full_base.mk
+PRODUCT_LOCALES := zh_CN
+
+启用PL2303 USB 转串口
+/home/lsw/workspace/rk3399/sys-source/OK3399-android7-source/kernel/arch/arm64/configs
+
+把is not set 改成=y
+
+设置所有者所属组
+/home/lsw/workspace/rk3399/sys-source/OK3399-android7-source/device/rockchip/common
+
+
+内核设备树指定，修改 forlinx_control 使能okay 主显示改为eDP@l
+kernel/arch/arm64/boot/dts/rockchip/ok3399.dts
