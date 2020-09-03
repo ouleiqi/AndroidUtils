@@ -116,6 +116,10 @@ public class RS485SerialPortUtilNew {
         }
     }
 
+    public boolean isQueueFull() {
+        return rsBlockingQueue.remainingCapacity()  == 0;
+    }
+
 
     private class WriteReadThread extends Thread {
 

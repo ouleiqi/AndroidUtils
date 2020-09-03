@@ -106,7 +106,7 @@ public class HttpApi {
         Map<String, String> result = new HashMap<String, String>();
         Field[] fields = bean.getClass()
                              .getFields();
-        if (fields == null || fields.length == 0) {
+        if (fields.length == 0) {
             return result;
         }
 
@@ -128,7 +128,7 @@ public class HttpApi {
         fields = bean.getClass()
                      .getSuperclass()
                      .getFields();
-        if (fields == null || fields.length == 0) {
+        if (fields.length == 0) {
             return result;
         }
 

@@ -119,12 +119,12 @@ Java_org_tcshare_utils_RS485SerialPort_open(JNIEnv *env, jobject type, jstring d
     sprintf(enableRecv, "%s%s", ECHO_0, enable_io);
     env->ReleaseStringUTFChars(enableIO, enable_io);
 
-    hasDriver = (hasDriver == JNI_TRUE);
+    kernelHasDriver = (hasDriver == JNI_TRUE);
 
     if(DEBUG) LOGD("enSend: %s", enableSend);
     if(DEBUG) LOGD("enRecv: %s", enableRecv);
 
-    if(hasDriver){
+    if(kernelHasDriver){
         FD_IO=open(enable_io,O_RDWR);
         if(FD_IO == -1)
         {
@@ -150,7 +150,7 @@ Java_org_tcshare_utils_RS485SerialPort_open(JNIEnv *env, jobject type, jstring d
         const char *path_utf = env->GetStringUTFChars(devPath, JNI_FALSE);
         LOGD("Opening serial port %s with band %d and flags 0x%x", path_utf, baudRate, O_SYNC |O_RDWR | O_NOCTTY | flags);
         FD = open(path_utf,  O_SYNC |O_RDWR | O_NOCTTY | flags);
-        LOGD("open() fd = %d", FD);
+        LOGD("open() fd = %d kernelHasDriver %d", FD, kernelHasDriver);
         env->ReleaseStringUTFChars(devPath, path_utf);
         if (FD == -1) {
             LOGE("Cannot open port");
@@ -398,16 +398,15 @@ int rsRead(int fd, char *buf, int MaxLen, int waitTime) {
 //485发送接收函数
 int sendWaitRecv(int fd, char *sendBuf, int sendLen, char *revBuf, int readMaxLen, int readWaitTime) {
     int len = 0;
-    int nValue;
     if (fd < 0) {
         LOGE("error fd < 0 ");
         return -1;
     }
-
     //使能发送
     if(kernelHasDriver){
         int gpioONValue;
         ioctl(FD_IO,GPIO_ON, &gpioONValue) ;
+        if (DEBUG) LOGI("GPIO_ON");
     }else{
         int ret = system(enableSend);
         if(DEBUG) LOGI("enableSend %s %d", enableSend, ret);
@@ -416,19 +415,21 @@ int sendWaitRecv(int fd, char *sendBuf, int sendLen, char *revBuf, int readMaxLe
     rsWrite(fd, sendBuf, sendLen);
 
     //等发送完成
-    while (true) {
+    int nValue;
+
+    do {
         ioctl(fd, TIOCSERGETLSR, &nValue);
-        if (nValue) {
-            // 使能接受
-            if (kernelHasDriver) {
-                int gpioOFFValue;
-                ioctl(FD_IO, GPIO_OFF, &gpioOFFValue);
-            }else{
-                int ret = system(enableRecv);
-                if (DEBUG) LOGI("enableRecv %s %d", enableRecv, ret);
-            }
-            break;
-        }
+    } while( !nValue & TIOCSER_TEMT );
+
+    // 使能接受
+    if (kernelHasDriver) {
+        // usleep(500*1000);//test
+        int gpioOFFValue;
+        ioctl(FD_IO, GPIO_OFF, &gpioOFFValue);
+        if (DEBUG) LOGI("GPIO_OFF");
+    }else{
+        int ret = system(enableRecv);
+        if (DEBUG) LOGI("enableRecv %s %d", enableRecv, ret);
     }
 
     len = rsRead(fd, revBuf, readMaxLen, readWaitTime);

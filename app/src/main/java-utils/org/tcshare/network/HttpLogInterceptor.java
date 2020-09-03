@@ -3,6 +3,8 @@ package org.tcshare.network;
 import android.util.Log;
 
 
+import com.google.gson.Gson;
+
 import org.tcshare.app.BuildConfig;
 
 import java.io.IOException;
@@ -30,7 +32,7 @@ public class HttpLogInterceptor implements okhttp3.Interceptor {
                 String resHeader = res.headers() .toString();
                 Log.d(TAG,"reqHeaderStr" + reqHeader);
                 Log.d(TAG,"resHeaderStr"+ resHeader);
-                Log.d(TAG, "req:" + req.toString());
+                Log.d(TAG, "req:" + req.toString() + new Gson().toJson(req.body()));
                 ResponseBody copyRes = res.peekBody(Long.MAX_VALUE);
                 String resStr = copyRes.string();
                 Log.d(TAG, "res:" + resStr);
