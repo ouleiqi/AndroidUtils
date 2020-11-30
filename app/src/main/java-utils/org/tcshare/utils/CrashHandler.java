@@ -94,7 +94,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         if (null == ex) {
             return false;
         }
-        Toast.makeText(ctx, "程序异常，1秒后重启！", Toast.LENGTH_LONG).show();
+        ToastUtil.showToastLong(ctx, "程序异常，1秒后重启！");
         // 收集设备参数信息
         collectDeviceInfo();
         // 保存日志文件

@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.tcshare.app.R;
 import org.tcshare.app.amodule.adapter.WifiAdapter;
-import org.tcshare.app.utils.ToastUtil;
+import org.tcshare.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;

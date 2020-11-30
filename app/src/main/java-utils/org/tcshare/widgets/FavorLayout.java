@@ -18,7 +18,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import org.tcshare.app.BuildConfig;
 import org.tcshare.app.R;
 import org.tcshare.utils.DensityUtil;
 import org.tcshare.utils.RandomUtils;
@@ -136,7 +135,7 @@ public class FavorLayout extends RelativeLayout {
         }
 
         addView(imageView);
-        if(BuildConfig.IS_DEBUG) Log.d(TAG, "addFavor: " + "add后子view数:" + getChildCount());
+        Log.d(TAG, "addFavor: " + "add后子view数:" + getChildCount());
 
         Animator set = getAnimator(imageView);
         set.addListener(new AnimEndListener(imageView));
@@ -287,7 +286,7 @@ public class FavorLayout extends RelativeLayout {
             super.onAnimationEnd(animation);
             //因为不停的add 导致子view数量只增不减,所以在view动画结束后remove掉
             removeView((target));
-            if(BuildConfig.IS_DEBUG) Log.v(TAG, "removeView后子view数:" + getChildCount());
+            Log.v(TAG, "removeView后子view数:" + getChildCount());
         }
     }
 

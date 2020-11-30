@@ -1,4 +1,4 @@
-package org.tcshare.app.utils;
+package org.tcshare.utils;
 
 import android.content.Context;
 import android.net.wifi.ScanResult;

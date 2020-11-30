@@ -4,10 +4,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * 新版实现 <br/>
@@ -17,6 +17,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class RS485SerialPortUtilNew {
     private static final String TAG = RS485SerialPortUtilNew.class.getSimpleName();
+    private static final boolean DEBUG = false;
 
     static {
         System.loadLibrary("serialport");
@@ -25,7 +26,8 @@ public class RS485SerialPortUtilNew {
     private RS485SerialPort rs485SerialPort = new RS485SerialPort();
     private WriteReadThread mWriteReadThread;
     private boolean isOpenSerialSuccess;
-    private  BlockingQueue<RSCallback> rsBlockingQueue;
+    private LinkedBlockingQueue<RSCallback> rsBlockingQueue;
+    private static final long waitSlaverTime = 100; // 使用等待从机模式， 从机释放总线可能比较慢, ms
 
     public RS485SerialPortUtilNew() {
         this(Integer.MAX_VALUE);
@@ -34,6 +36,7 @@ public class RS485SerialPortUtilNew {
     public RS485SerialPortUtilNew(int queueSize) {
         rsBlockingQueue = new LinkedBlockingQueue<>(queueSize);
     }
+
 
     /**
      * @param band      波特率
@@ -52,10 +55,14 @@ public class RS485SerialPortUtilNew {
             ShellUtils.CommandResult cmdEnableResult = ShellUtils.execCommand(cmdEnable, true);
             Log.d(TAG, String.format("exe command: %s result %s", cmdEnable, cmdEnableResult.toString()));
 
-            rs485SerialPort.open(port, rs485Path, band, 0, hasDriver);
+            int result = rs485SerialPort.open(port, rs485Path, band, 0, hasDriver);
             mWriteReadThread = new WriteReadThread();
             mWriteReadThread.start();
-            isOpenSerialSuccess = true;
+            if(result != -1) {
+                isOpenSerialSuccess = true;
+            }else{
+                isOpenSerialSuccess = false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, "打开串口时，异常");
@@ -88,30 +95,21 @@ public class RS485SerialPortUtilNew {
      * @param cb
      */
     public void sendData(@NonNull final RSCallback cb) {
-        sendData(false, cb);
-    }
-
-    /**
-     * @param cb
-     */
-    public void sendDataInsert(@NonNull final RSCallback cb) {
-        sendData(true, cb);
-    }
-
-    /**
-     * @param cb
-     */
-    private void sendData(boolean insert, @NonNull final RSCallback cb) {
         try {
-            if (insert) {// 插队
-                List<RSCallback> contains = new ArrayList<>();
-                rsBlockingQueue.drainTo(contains);
-                rsBlockingQueue.put(cb);
-                rsBlockingQueue.addAll(contains);
-            } else {
-                rsBlockingQueue.put(cb);
-            }
-        } catch (Exception e) {
+            rsBlockingQueue.put(cb);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param cb
+     */
+    public void sendDataInsertHead(@NonNull final RSCallback cb) {
+        cb.level = Long.MAX_VALUE; // 使用优先级队列时有效
+        try {
+            rsBlockingQueue.put(cb);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -119,7 +117,17 @@ public class RS485SerialPortUtilNew {
     public boolean isQueueFull() {
         return rsBlockingQueue.remainingCapacity()  == 0;
     }
+    public int queueSize() {
+        return rsBlockingQueue.size();
+    }
 
+    public boolean contains(RSCallback rs){
+        return rsBlockingQueue.contains(rs);
+    }
+
+    public BlockingQueue<RSCallback> queue() {
+        return rsBlockingQueue;
+    }
 
     private class WriteReadThread extends Thread {
 
@@ -134,9 +142,40 @@ public class RS485SerialPortUtilNew {
             super.run();
             while (!isInterrupted()) {
                 try {
-                    RSCallback obj = rsBlockingQueue.take();
-                    byte[] recBytes = rs485SerialPort.send(obj.sendBytes, obj.recBufLen, obj.waitTime);
-                    obj.onReceiveFinish(recBytes);
+                    RSCallback obj ;
+                    while ((obj = rsBlockingQueue.poll()) == null){
+                        rs485SerialPort.drain(1);
+                    }
+                    if(obj.sendBytes.length == 0){
+                        obj.onReceiveFinish(null);
+                    }else {
+                        if(DEBUG) Log.d(TAG, "------send Bytes: " + HexDump.toHexString(obj.sendBytes));
+                        byte[] recBytes = rs485SerialPort.send(obj.sendBytes, obj.recBufLen, obj.waitTime);
+                        if(DEBUG) Log.d(TAG, "------recv Bytes: " + (recBytes == null ? "null " : HexDump.toHexString(recBytes)));
+                        obj.onReceiveFinish(recBytes);
+
+                        if(waitSlaverTime > 0){
+                            try {
+                                Thread.sleep(waitSlaverTime);
+                            }catch (Exception e){ }
+                        }
+                    }
+                /*    RSCallback obj = rsBlockingQueue.take();
+                    if(obj.sendBytes.length == 0){
+                        obj.onReceiveFinish(null);
+                    }else {
+                        Log.e(TAG, "------send Bytes: " + HexDump.toHexString(obj.sendBytes));
+                        byte[] recBytes = rs485SerialPort.send(obj.sendBytes, obj.recBufLen, obj.waitTime);
+                        Log.e(TAG, "------recv Bytes: " + (recBytes == null ? "null " : HexDump.toHexString(recBytes)));
+                        obj.onReceiveFinish(recBytes);
+
+                        if(waitSlaverTime > 0){
+                            try {
+                                Thread.sleep(waitSlaverTime);
+                            }catch (Exception e){ }
+                        }
+                    }*/
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     isOpenSerialSuccess = false;
@@ -146,7 +185,7 @@ public class RS485SerialPortUtilNew {
         }
     }
 
-    public static abstract class RSCallback {
+    public static abstract class RSCallback  implements Comparable<RSCallback>{
         /**
          * 需要发送的数据
          */
@@ -159,6 +198,24 @@ public class RS485SerialPortUtilNew {
          * 读取超时时间 ms
          */
         public int waitTime;
+        /**
+         * 用于排序的优先级，越大越靠前
+         */
+        public long level = 0;
+        /**
+         * 用于判断两个对象是否是相等，如果ID相等，则对象相等
+         */
+        public String id;
+
+        public RSCallback setId(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public RSCallback setLevel(long level) {
+            this.level = level;
+            return this;
+        }
 
         public RSCallback(@NonNull byte[] sendData, int recBufLen, int waitTime) {
             this.sendBytes = sendData;
@@ -166,9 +223,56 @@ public class RS485SerialPortUtilNew {
             this.waitTime = waitTime;
         }
 
+        public RSCallback(@NonNull byte[] sendData, int recBufLen, int waitTime, long level) {
+            this.sendBytes = sendData;
+            this.recBufLen = recBufLen;
+            this.waitTime = waitTime;
+            this.level = level;
+        }
+
         /**
          * @param recBytes may be null
          */
         public abstract void onReceiveFinish(byte[] recBytes);
+
+
+        @Override
+        public int compareTo(RSCallback o) {
+            return Long.compare( o.level,level);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            RSCallback that = (RSCallback) o;
+            return Objects.equals(id, that.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id);
+        }
+    }
+
+    public static class EmptyRSCallback extends RSCallback{
+
+        public EmptyRSCallback(String id) {
+            super(new byte[0], 0, 0);
+            super.id = id;
+        }
+
+        @Override
+        public void onReceiveFinish(byte[] recBytes) {
+
+        }
+        @Override
+        public boolean equals(Object o) {
+            RSCallback that = (RSCallback) o;
+            return Objects.equals(id, that.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id);
+        }
     }
 }

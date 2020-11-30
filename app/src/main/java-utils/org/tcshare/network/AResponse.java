@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import org.tcshare.app.BuildConfig;
 import org.tcshare.app.R;
 import org.tcshare.dialog.LoadingDialog;
 
@@ -19,7 +18,7 @@ import okhttp3.Callback;
  */
 
 public abstract class AResponse<T> implements Callback {
-    protected Handler handler = new Handler(Looper.getMainLooper());
+    protected static final Handler handler = new Handler(Looper.getMainLooper());
     protected       Context ctx;
     private Dialog  loadingDialog;
 
@@ -29,13 +28,13 @@ public abstract class AResponse<T> implements Callback {
     public AResponse(Context ctx){
         this.ctx = ctx;
         if(ctx != null) {
-            loadingDialog = LoadingDialog.createLoadingDialog(ctx, ctx.getString(R.string.loading));
+            loadingDialog = LoadingDialog.createLoadingDialog(ctx, ctx.getString(R.string.loading), true);
         }
     }
 
     @Override
     public void onFailure(Call call, IOException e) {
-        if(BuildConfig.DEBUG) e.printStackTrace();
+        e.printStackTrace();
         nextUI(call, e);
     }
 

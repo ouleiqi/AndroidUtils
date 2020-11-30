@@ -40,7 +40,7 @@ public class HttpApi {
     private static final long   WRITE_TIMEOUT         = 300; // seconds
     public static final  String UPLOAD_FILE_KEY       = "file";
     public static final  String UPLOAD_MULTI_FILE_KEY = "file[]";
-
+    public static final boolean DEBUG = true;
     /**
      * 提供修改client的方法。
      */

@@ -19,6 +19,11 @@ public class RS485SerialPort {
     public native int open(String devPath, String enableIO, int baudRate, int flags, boolean hasDriver);
 
     /**
+     * 1ms超时，拉取字节
+     */
+    public native int drain(int time);
+
+    /**
      * 向串口发送数据
      * @param sendArray 发送内容
      * @param revBufSize 接收缓冲区

@@ -2,7 +2,6 @@ package org.tcshare.network;
 
 import android.content.Context;
 
-import org.tcshare.app.BuildConfig;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -13,11 +12,11 @@ import okhttp3.Response;
 
 public abstract class ResponseString extends AResponse<String> {
 
-    public ResponseString(){
+    public ResponseString() {
         super();
     }
 
-    public ResponseString(Context ctx){
+    public ResponseString(Context ctx) {
         super(ctx);
     }
 
@@ -26,8 +25,8 @@ public abstract class ResponseString extends AResponse<String> {
         String result = null;
         try {
             result = response.body().string();
-        } catch (Exception e){
-            if(BuildConfig.DEBUG) e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return result;
     }

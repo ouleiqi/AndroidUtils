@@ -13,7 +13,7 @@
 
     </style>
     <!-- 底部dialog背景透明 -->
-   <style name="BottomListSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+    <style name="BottomListSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/BottomListSheetStyle</item>
     </style>
 

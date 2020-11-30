@@ -2,13 +2,9 @@ package org.tcshare.network;
 
 import android.util.Log;
 
-
 import com.google.gson.Gson;
 
-import org.tcshare.app.BuildConfig;
-
 import java.io.IOException;
-import java.util.Random;
 
 import okhttp3.Request;
 import okhttp3.Response;
@@ -26,7 +22,7 @@ public class HttpLogInterceptor implements okhttp3.Interceptor {
         Request req = chain.request();
         Response res = chain.proceed(req);
 
-        if(BuildConfig.IS_DEBUG){
+        if(HttpApi.DEBUG){
             try {
                 String reqHeader = res.networkResponse().request().headers().toString();
                 String resHeader = res.headers() .toString();

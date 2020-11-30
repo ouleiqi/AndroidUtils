@@ -29,7 +29,7 @@ public class PackageUtil {
             Intent intent = ctx.getPackageManager().getLaunchIntentForPackage(appPackageName);
             ctx.startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(ctx, ctx.getString(R.string.app_not_install), Toast.LENGTH_SHORT).show();
+            ToastUtil.showToastShort(ctx, ctx.getString(R.string.app_not_install));
         }
     }
 }

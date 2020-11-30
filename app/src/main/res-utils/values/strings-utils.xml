@@ -13,4 +13,6 @@
     <string name="no_write_permission">下载取消，没有写入SD卡的权限!</string>
     <string name="load_more">上拉加载更多</string>
     <string name="loading">正在加载 ....</string>
+    <string name="title_del_pic">删除图片</string>
+    <string name="title_del_pic_msg">确认删除这张图片？</string>
 </resources>

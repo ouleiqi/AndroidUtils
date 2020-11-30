@@ -14,8 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.tcshare.app.R;
-import org.tcshare.app.utils.ToastUtil;
-import org.tcshare.app.utils.WiFiUtil;
+import org.tcshare.utils.ToastUtil;
+import org.tcshare.utils.WiFiUtil;
 
 import java.util.List;
 

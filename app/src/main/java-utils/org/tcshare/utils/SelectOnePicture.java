@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -28,6 +29,7 @@ public class SelectOnePicture {
             public void onResult(int requestCode, String[] permissions, int[] grantResult) {
                 for (int result : grantResult) {
                     if (PackageManager.PERMISSION_GRANTED != result) {
+                        ToastUtil.showToastLong(ctx, "请授予选择照片、拍照的权限");
                         return;
                     }
                 }

@@ -1,4 +1,4 @@
-package org.tcshare.app.utils;
+package org.tcshare.utils;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -20,9 +20,15 @@ public class ToastUtil {
     public static void showToastLong(Context context, String msg) {
         showToast(context, msg, Toast.LENGTH_LONG);
     }
+    public static void showToastLong(Context context, int msgID) {
+        showToast(context, context.getResources().getString(msgID), Toast.LENGTH_LONG);
+    }
 
     public static void showToastShort(Context context, String msg) {
         showToast(context, msg, Toast.LENGTH_SHORT);
+    }
+    public static void showToastShort(Context context, int msgID) {
+        showToast(context, context.getResources().getString(msgID), Toast.LENGTH_SHORT);
     }
 
     private static void showToast(Context context, String msg, int duration) {

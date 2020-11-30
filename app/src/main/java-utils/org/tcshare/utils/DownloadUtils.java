@@ -94,7 +94,7 @@ public class DownloadUtils {
                         mContext.registerReceiver(mReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
                     }
                 }else{
-                    Toast.makeText(mContext,R.string.no_write_permission, Toast.LENGTH_SHORT).show();
+                    ToastUtil.showToastShort(mContext,R.string.no_write_permission);
                 }
             }
         });
@@ -134,7 +134,7 @@ public class DownloadUtils {
                     break;
                 //下载失败
                 case DownloadManager.STATUS_FAILED:
-                    Toast.makeText(mContext, R.string.download_failed, Toast.LENGTH_SHORT).show();
+                    ToastUtil.showToastShort(mContext, R.string.download_failed);
                     break;
             }
         }

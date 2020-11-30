@@ -13,9 +13,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import org.tcshare.app.R;
 import org.tcshare.app.amodule.fragment.EmptyFragment;
 import org.tcshare.app.amodule.fragment.RVListFragment;
-import org.tcshare.app.utils.ToastUtil;
 import org.tcshare.fragment.WebViewFragment;
 import org.tcshare.permission.PermissionHelper;
+import org.tcshare.utils.ToastUtil;
 import org.tcshare.widgets.BottomListDialog;
 
 import java.util.Arrays;

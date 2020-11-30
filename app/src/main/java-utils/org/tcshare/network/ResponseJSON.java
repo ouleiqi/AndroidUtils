@@ -1,6 +1,7 @@
 package org.tcshare.network;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -14,6 +15,9 @@ import okhttp3.Response;
  */
 
 public abstract class ResponseJSON<T> extends AResponse<T> {
+    private static final String TAG = ResponseJSON.class.getSimpleName();
+    private static final boolean DEBUG = true;
+
     public ResponseJSON() {
         super();
     }
@@ -26,6 +30,9 @@ public abstract class ResponseJSON<T> extends AResponse<T> {
         T result = null;
         try {
             String str = response.body().string();
+            if(DEBUG){
+                Log.e(TAG, str);
+            }
             result = new Gson().fromJson(str, (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
         } catch (Exception e) {
             e.printStackTrace();

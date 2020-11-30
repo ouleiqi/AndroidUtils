@@ -19,14 +19,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 
-import org.tcshare.app.BuildConfig;
-import org.tcshare.app.R;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import org.tcshare.app.R;
 
 /**
  * 优先加载 url ，没有url 则加载 content
@@ -57,6 +56,7 @@ public class WebViewFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    @SuppressLint("JavascriptInterface")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -91,7 +91,7 @@ public class WebViewFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
-                if(BuildConfig.DEBUG) Log.d(TAG, "error:" + error);
+                Log.d(TAG, "error:" + error);
                 retry.setVisibility(View.VISIBLE);
                 mWebView.loadData("", "text/html; charset=UTF-8", null);
             }

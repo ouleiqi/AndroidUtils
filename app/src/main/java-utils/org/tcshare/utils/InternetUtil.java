@@ -19,6 +19,8 @@ public class InternetUtil {
     public static final int NETWORN_3G = 3;
     public static final int NETWORN_4G = 4;
     public static final int NETWORN_MOBILE = 5;
+    // eth 有线连接
+    public static final int NETWORN_ETH = 6;
 
     /**
      * 获取当前网络连接类型
@@ -37,6 +39,16 @@ public class InternetUtil {
         NetworkInfo activeNetInfo = connManager.getActiveNetworkInfo();
         if (activeNetInfo == null || !activeNetInfo.isAvailable()) {
             return NETWORN_NONE;
+        }
+
+        // 判断是不是连接的是不是有线
+        NetworkInfo ethInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_ETHERNET);
+        if (null != ethInfo) {
+            NetworkInfo.State state = ethInfo.getState();
+            if (null != state)
+                if (state == NetworkInfo.State.CONNECTED || state == NetworkInfo.State.CONNECTING) {
+                    return NETWORN_ETH;
+                }
         }
 
         // 判断是不是连接的是不是wifi
