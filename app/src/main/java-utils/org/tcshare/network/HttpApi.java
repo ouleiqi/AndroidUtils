@@ -98,6 +98,21 @@ public class HttpApi {
     }
 
     /**
+     * 获取headers
+     * @return
+     */
+    public static Headers getHeaders(){
+        return RequestBuilderFactory.getHeaders();
+    }/**
+     * 获取header
+     * @param name
+     * @return
+     */
+    public static String getHeader(String name){
+        return RequestBuilderFactory.getHeaders().get(name);
+    }
+
+    /**
      * 清空，并设置
      * @param map
      */
