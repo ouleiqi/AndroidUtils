@@ -22,6 +22,7 @@ import okhttp3.Authenticator;
 import okhttp3.Callback;
 import okhttp3.CookieJar;
 import okhttp3.Credentials;
+import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -34,13 +35,14 @@ import okhttp3.Route;
  */
 public class HttpApi {
 
+    private static final boolean DEBUG = true;
     private static OkHttpClient client;
-    private static final long   CONECT_TIMEOUT        = 60; // seconds
-    private static final long   READ_TIMEOUT          = 90; // seconds
-    private static final long   WRITE_TIMEOUT         = 300; // seconds
-    public static final  String UPLOAD_FILE_KEY       = "file";
-    public static final  String UPLOAD_MULTI_FILE_KEY = "file[]";
-    public static final boolean DEBUG = true;
+    private static final long CONECT_TIMEOUT = 60; // seconds
+    private static final long READ_TIMEOUT = 90; // seconds
+    private static final long WRITE_TIMEOUT = 300; // seconds
+    public static final String UPLOAD_FILE_KEY = "file";
+    public static final String UPLOAD_MULTI_FILE_KEY = "file[]";
+
     /**
      * 提供修改client的方法。
      */
@@ -54,9 +56,10 @@ public class HttpApi {
                 if (client == null) {
 
                     client = new OkHttpClient.Builder().connectTimeout(CONECT_TIMEOUT, TimeUnit.SECONDS)//设置超时时间
-                                                       .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
-                                                       .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)//设置写入超时时间
-                                                       .build();
+                            .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
+                            .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)//设置写入超时时间
+                            .addInterceptor(new HttpLogInterceptor(DEBUG))
+                            .build();
                 }
             }
         }
@@ -67,35 +70,93 @@ public class HttpApi {
     public static OkHttpClient.Builder getProxyAuthBuilder(String proxyHost, int proxyPort, final String username, final String password) {
         Authenticator proxyAuthenticator = getProxyHeaderAuth(username, password);
         return new OkHttpClient.Builder().connectTimeout(CONECT_TIMEOUT, TimeUnit.SECONDS)//设置超时时间
-                                                                 .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
-                                                                 .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)//设置写入超时时间
-                                                                 .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)))
-                                                                 .proxyAuthenticator(proxyAuthenticator);
+                .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
+                .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)//设置写入超时时间
+                .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)))
+                .proxyAuthenticator(proxyAuthenticator)
+                .addInterceptor(new HttpLogInterceptor(DEBUG));
     }
 
-    public static Authenticator getProxyHeaderAuth(final String username, final String password){
+
+    public static Authenticator getProxyHeaderAuth(final String username, final String password) {
         return new Authenticator() {
             @Override
             public Request authenticate(Route route, Response response) throws IOException {
                 String credential = Credentials.basic(username, password);
                 return response.request()
-                               .newBuilder()
-                               .header("Proxy-Authorization", credential)
-                               .build();
+                        .newBuilder()
+                        .header("Proxy-Authorization", credential)
+                        .build();
             }
         };
     }
-    public static Authenticator getHeaderAuth(final String username, final String password){
+
+    public static Authenticator getHeaderAuth(final String username, final String password) {
         return new Authenticator() {
             @Override
             public Request authenticate(Route route, Response response) throws IOException {
                 String credential = Credentials.basic(username, password);
                 return response.request()
-                               .newBuilder()
-                               .header("Authorization", credential)
-                               .build();
+                        .newBuilder()
+                        .header("Authorization", credential)
+                        .build();
             }
         };
+    }
+
+    /**
+     * 清空，并设置
+     * @param map
+     */
+    public static void setHeaders(Map<String,String> map){
+        RequestBuilderFactory.setHeaders(Headers.of(map));
+    }
+
+    /**
+     * 追加，如果存在，则更新
+     * @param map
+     */
+    public static void addHeaders(Map<String,String> map){
+        Headers headers = RequestBuilderFactory.getHeaders();
+        Headers.Builder headersBuilder = headers.newBuilder();
+        for(Map.Entry<String,String> entry : map.entrySet()) {
+            headersBuilder.set(entry.getKey(), entry.getValue());
+        }
+        RequestBuilderFactory.setHeaders(headersBuilder.build());
+    }
+
+    /**
+     * 追加，如果存在，则更新
+     * @param name
+     * @param value
+     */
+    public static void addHeader(String name, String value){
+        Headers headers = RequestBuilderFactory.getHeaders();
+        Headers.Builder headersBuilder = headers.newBuilder();
+        headersBuilder.set(name, value);
+        RequestBuilderFactory.setHeaders(headersBuilder.build());
+    }
+
+    /**
+     * 移除header键值对
+     * @param map
+     */
+    public static void removeHeaders(Map<String,String> map){
+        Headers headers = RequestBuilderFactory.getHeaders();
+        Headers.Builder headersBuilder = headers.newBuilder();
+        for(Map.Entry<String,String> entry : map.entrySet()) {
+            headersBuilder.removeAll(entry.getKey());
+        }
+        RequestBuilderFactory.setHeaders(Headers.of(map));
+    }/**
+     * 移除header键值对
+     * @param name
+     */
+    public static void removeHeader(String name){
+        Headers headers = RequestBuilderFactory.getHeaders();
+        Headers.Builder headersBuilder = headers.newBuilder();
+        headersBuilder.removeAll(name);
+        RequestBuilderFactory.setHeaders(headersBuilder.build());
     }
 
     private static Map<String, String> beanToMap(Object bean) {
@@ -105,7 +166,7 @@ public class HttpApi {
 
         Map<String, String> result = new HashMap<String, String>();
         Field[] fields = bean.getClass()
-                             .getFields();
+                .getFields();
         if (fields.length == 0) {
             return result;
         }
@@ -126,8 +187,8 @@ public class HttpApi {
 
         //获取父类属性
         fields = bean.getClass()
-                     .getSuperclass()
-                     .getFields();
+                .getSuperclass()
+                .getFields();
         if (fields.length == 0) {
             return result;
         }
@@ -150,14 +211,14 @@ public class HttpApi {
 
     public static Object sendRequest(Request request, Callback callback) {
         getOkHttpClient().newCall(request)
-                         .enqueue(callback);
+                .enqueue(callback);
         return request.tag();
     }
 
     public static <T extends AResponse> Object sendRequest(Request request, T callback) {
         callback.onStart();
         getOkHttpClient().newCall(request)
-                         .enqueue(callback);
+                .enqueue(callback);
         return request.tag();
     }
 
@@ -184,9 +245,10 @@ public class HttpApi {
     }
 
     public static <T extends AResponse> void post(String url, String formType, Map<String, String> params, String fileKey, List<File> files, T callBack) {
-        Request.Builder multiFormBuilder = RequestBuilderFactory.createMultiPostRequestBuilder(url, formType,fileKey, params, files);
+        Request.Builder multiFormBuilder = RequestBuilderFactory.createMultiPostRequestBuilder(url, formType, fileKey, params, files);
         sendRequest(multiFormBuilder.build(), callBack);
     }
+
     public static <T extends AResponse> void post(String url, Map<String, String> params, String fileKey, List<File> files, T callBack) {
         post(url, "multipart/form-data", params, fileKey, files, callBack);
     }
@@ -194,10 +256,10 @@ public class HttpApi {
     public static <T extends AResponse> void post(String url, Map<String, String> params, List<File> files, T callBack) {
         post(url, params, UPLOAD_MULTI_FILE_KEY, files, callBack);
     }
+
     public static <T extends AResponse> void post(String url, Map<String, String> params, File[] files, T callBack) {
         post(url, params, Arrays.asList(files), callBack);
     }
-
 
 
     public static <T extends AResponse> void postJSON(String url, String json, T callBack) {
@@ -205,11 +267,10 @@ public class HttpApi {
         sendRequest(jsonRequestBuilder.build(), callBack);
 
     }
+
     public static <T extends AResponse> void postJSON(String url, Object obj, T callBack) {
-       postJSON(url, new Gson().toJson(obj), callBack);
+        postJSON(url, new Gson().toJson(obj), callBack);
     }
-
-
 
 
     public static <T extends AResponse> void upload(String url, String fileKey, List<File> files, T callBack) {

@@ -12,11 +12,11 @@ import okhttp3.Response;
 
 public abstract class ResponseString extends AResponse<String> {
 
-    public ResponseString() {
+    public ResponseString(){
         super();
     }
 
-    public ResponseString(Context ctx) {
+    public ResponseString(Context ctx){
         super(ctx);
     }
 
@@ -25,7 +25,7 @@ public abstract class ResponseString extends AResponse<String> {
         String result = null;
         try {
             result = response.body().string();
-        } catch (Exception e) {
+        } catch (Exception e){
             e.printStackTrace();
         }
         return result;
