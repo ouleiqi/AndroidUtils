@@ -2,10 +2,6 @@ package org.tcshare.network;
 
 import com.google.gson.Gson;
 
-import org.tcshare.network.cookie.CookieJarImpl;
-import org.tcshare.network.cookie.MemoryCookieStore;
-import org.tcshare.network.cookie.PersistentCookieStore;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -20,13 +16,10 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Authenticator;
 import okhttp3.Callback;
-import okhttp3.CookieJar;
 import okhttp3.Credentials;
 import okhttp3.Headers;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.Route;
 
@@ -108,7 +101,7 @@ public class HttpApi {
      * 清空，并设置
      * @param map
      */
-    public static void setHeaders(Map<String,String> map){
+    public static void setHeaders(Map<String, String> map){
         RequestBuilderFactory.setHeaders(Headers.of(map));
     }
 
@@ -116,10 +109,10 @@ public class HttpApi {
      * 追加，如果存在，则更新
      * @param map
      */
-    public static void addHeaders(Map<String,String> map){
+    public static void addHeaders(Map<String, String> map){
         Headers headers = RequestBuilderFactory.getHeaders();
         Headers.Builder headersBuilder = headers.newBuilder();
-        for(Map.Entry<String,String> entry : map.entrySet()) {
+        for(Map.Entry<String, String> entry : map.entrySet()) {
             headersBuilder.set(entry.getKey(), entry.getValue());
         }
         RequestBuilderFactory.setHeaders(headersBuilder.build());
@@ -138,13 +131,19 @@ public class HttpApi {
     }
 
     /**
+     * 清除headers
+     */
+    public static void clearHeaders() {
+        RequestBuilderFactory.setHeaders(Headers.of());
+    }
+    /**
      * 移除header键值对
      * @param map
      */
-    public static void removeHeaders(Map<String,String> map){
+    public static void removeHeaders(Map<String, String> map){
         Headers headers = RequestBuilderFactory.getHeaders();
         Headers.Builder headersBuilder = headers.newBuilder();
-        for(Map.Entry<String,String> entry : map.entrySet()) {
+        for(Map.Entry<String, String> entry : map.entrySet()) {
             headersBuilder.removeAll(entry.getKey());
         }
         RequestBuilderFactory.setHeaders(Headers.of(map));
@@ -298,5 +297,6 @@ public class HttpApi {
     public static <T extends AResponse> void upload(String url, File[] file, T callBack) {
         upload(url, UPLOAD_MULTI_FILE_KEY, file, callBack);
     }
+
 
 }
