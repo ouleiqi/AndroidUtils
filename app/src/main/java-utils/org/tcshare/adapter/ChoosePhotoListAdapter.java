@@ -152,6 +152,11 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
         return list;
     }
 
+    public void clear() {
+        this.list.clear();
+        notifyDataSetChanged();
+    }
+
     public static class ViewHolder {
         ImageView item_show_photo;
         ImageView item_add_photo;

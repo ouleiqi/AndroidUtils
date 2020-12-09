@@ -49,4 +49,9 @@ public class SelectPictureGridView extends GridView {
         super.onMeasure(widthMeasureSpec, expandSpec);*/
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
+
+    public void clear() {
+        ChoosePhotoListAdapter adapter = (ChoosePhotoListAdapter) getAdapter();
+        adapter.clear();
+    }
 }
