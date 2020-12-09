@@ -38,18 +38,15 @@ public class RequestBuilderFactory {
     /**
      * 多文件，多个字段
      */
-    public static Request.Builder createMultiPostRequestBuilder(String targetUrl,String formType, String fileKey, Map<String, String> map, List<File> files) {
+    public static Request.Builder createMultiPostRequestBuilder(String targetUrl,MediaType formType, String fileKey, Map<String, String> map, List<File> files) {
         MultipartBody.Builder builder = new MultipartBody.Builder();
         if(map  != null) {
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 builder.addFormDataPart(entry.getKey(), entry.getValue());
             }
         }
-        if(!TextUtils.isEmpty(formType)) {
-            MediaType contentType = MediaType.parse(formType);
-            if(contentType != null) {
-                builder.setType(contentType);
-            }
+        if(formType != null) {
+            builder.setType(formType);
         }
         if(files != null && fileKey != null) {
             for(File file : files){
