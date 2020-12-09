@@ -52,7 +52,7 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if (list.size() < 9) {
+        if (list.size() < maxSize) {
             return list.size() + 1;
         } else {
             return list.size();
