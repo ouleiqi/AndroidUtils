@@ -54,7 +54,7 @@
             android:name="org.tcshare.activity.TCRequestPermissionActivity"
             android:theme="@style/Theme.Transparent" />
         <activity
-            android:name="org.tcshare.activity.SelectOnePictureActivity"
+            android:name="org.tcshare.activity.TCSelectOnePictureActivity"
             android:theme="@style/Theme.Transparent" />
     </application>
 

@@ -8,7 +8,7 @@
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:background="@android:color/transparent"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:visibility="visible" />
 
     <ImageView

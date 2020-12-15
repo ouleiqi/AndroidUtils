@@ -28,7 +28,7 @@ public class TCSelectOnePictureActivity extends Activity {
     public static final  String ACT_TYPE        = "action_type";
     private ResultReceiver resultReceiver;
     private File cacheDir = new File(Environment.getExternalStorageDirectory(), "tcache");
-    private File imageFile    = new File(cacheDir, "tempImage.jpg");
+    private File imageFile    = new File(cacheDir, String.format("%d.jpg", System.currentTimeMillis()));
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
