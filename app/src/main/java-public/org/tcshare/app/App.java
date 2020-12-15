@@ -28,7 +28,7 @@ public class App extends Application {
         ctx = this;
         CookieJar cookieJar = new CookieJarImpl(new PersistentCookieStore(ctx));
         //CookieJar cookieJar = new CookieJarImpl(new MemoryCookieStore());
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new HttpLogInterceptor())
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new HttpLogInterceptor(true))
                                                         .cookieJar(cookieJar)
                                                         .build();
         HttpApi.setClient(client);

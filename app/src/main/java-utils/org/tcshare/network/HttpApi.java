@@ -18,6 +18,8 @@ import okhttp3.Authenticator;
 import okhttp3.Callback;
 import okhttp3.Credentials;
 import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -258,13 +260,13 @@ public class HttpApi {
         sendRequest(formBuilder.build(), callBack);
     }
 
-    public static <T extends AResponse> void post(String url, String formType, Map<String, String> params, String fileKey, List<File> files, T callBack) {
+    public static <T extends AResponse> void post(String url, MediaType formType, Map<String, String> params, String fileKey, List<File> files, T callBack) {
         Request.Builder multiFormBuilder = RequestBuilderFactory.createMultiPostRequestBuilder(url, formType, fileKey, params, files);
         sendRequest(multiFormBuilder.build(), callBack);
     }
 
     public static <T extends AResponse> void post(String url, Map<String, String> params, String fileKey, List<File> files, T callBack) {
-        post(url, "multipart/form-data", params, fileKey, files, callBack);
+        post(url, MultipartBody.FORM, params, fileKey, files, callBack);
     }
 
     public static <T extends AResponse> void post(String url, Map<String, String> params, List<File> files, T callBack) {

@@ -45,7 +45,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
+                <org.tcshare.widgets.RadarView
+                    android:id="@+id/radarView"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"/>
                 <Button
                     android:id="@+id/qrCode"
                     android:layout_width="match_parent"

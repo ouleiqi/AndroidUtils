@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,8 +16,10 @@ import org.tcshare.app.amodule.fragment.EmptyFragment;
 import org.tcshare.app.amodule.fragment.RVListFragment;
 import org.tcshare.fragment.WebViewFragment;
 import org.tcshare.permission.PermissionHelper;
+import org.tcshare.utils.RandomUtils;
 import org.tcshare.utils.ToastUtil;
 import org.tcshare.widgets.BottomListDialog;
+import org.tcshare.widgets.RadarView;
 
 import java.util.Arrays;
 
@@ -27,6 +30,7 @@ public class TCMainActivity extends AppCompatActivity {
 
     private EditText serialPortText;
     private EditText serialPortBand;
+    private RadarView radarView;
 
     private void showBottomListDialog() {
         BottomListDialog.showSimpleDialog(TCMainActivity.this, new BottomListDialog.OnItemClickListener() {
@@ -66,6 +70,21 @@ public class TCMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tc_main);
         serialPortText = findViewById(R.id.serialPortText);
         serialPortBand = findViewById(R.id.serialPortBand);
+
+        radarView = findViewById(R.id.radarView);
+        radarView.setSearching(true);
+        addPoint();
+
+    }
+    private void addPoint(){
+        radarView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                radarView.addPoint(RandomUtils.getRandomFloat(1));
+                addPoint();
+            }
+        }, 50);
+
     }
 
     public void onItemClick(View view){
