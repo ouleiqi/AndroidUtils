@@ -128,7 +128,8 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
                         if(resultCode != Activity.RESULT_OK){
                             return;
                         }else if(beforeAddListener != null){
-                            beforeAddListener.onBeforeAdd(path, new Callback() {
+                            int pos = list.size();
+                            beforeAddListener.onBeforeAdd(pos, path, new Callback() {
                                 @Override
                                 public void onTaskFinish(boolean success) {
                                     if(!success) return;
@@ -197,12 +198,12 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
         ImageView item_del_photo;
     }
     public interface LeforeAddListener{
-        void onBeforeAdd(String path, Callback callBack);
+        void onBeforeAdd(int pos, String path, Callback callBack);
     }
     public interface Callback{
         void onTaskFinish(boolean success);
     }
     public interface LeforeDelListener{
-        void onBeforeDel(int position, String path, Callback callBack);
+        void onBeforeDel(int pos, String path, Callback callBack);
     }
 }
