@@ -16,6 +16,7 @@
 
 package org.tcshare.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
@@ -44,10 +45,16 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private Context context;
     private List<String> list = new ArrayList<>();
+    private LeforeAddListener beforeAddListener;
+    private LeforeDelListener beforeDelListener;
 
     public ChoosePhotoListAdapter(Context context) {
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
+    }
+    public void setListener(LeforeAddListener beforeAddListener, LeforeDelListener beforeDelListener){
+        this.beforeAddListener = beforeAddListener;
+        this.beforeDelListener = beforeDelListener;
     }
 
     @Override
@@ -60,8 +67,9 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
-        return position;
+    public String getItem(int position) {
+
+        return list.get(position);
     }
 
     @Override
@@ -117,8 +125,22 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
 
                     @Override
                     public void onResult(int resultCode, String path) {
-                        list.add(path);
-                        notifyDataSetChanged();
+                        if(resultCode != Activity.RESULT_OK){
+                            return;
+                        }else if(beforeAddListener != null){
+                            beforeAddListener.onBeforeAdd(path, new Callback() {
+                                @Override
+                                public void onTaskFinish(boolean success) {
+                                    if(!success) return;
+                                    list.add(path);
+                                    notifyDataSetChanged();
+                                }
+                            });
+                        }else{
+                            list.add(path);
+                            notifyDataSetChanged();
+                        }
+
                     }
                 });
             }
@@ -132,8 +154,20 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
                         .setPositiveButton(context.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                list.remove(position);
-                                notifyDataSetChanged();
+                                if(beforeDelListener != null){
+                                    beforeDelListener.onBeforeDel(position, list.get(position), new Callback() {
+                                        @Override
+                                        public void onTaskFinish(boolean success) {
+                                            if(!success) return;
+                                            list.remove(position);
+                                            notifyDataSetChanged();
+                                        }
+                                    });
+                                }else{
+                                    list.remove(position);
+                                    notifyDataSetChanged();
+                                }
+
                             }
                         })
                         .setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -161,5 +195,14 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
         ImageView item_show_photo;
         ImageView item_add_photo;
         ImageView item_del_photo;
+    }
+    public interface LeforeAddListener{
+        void onBeforeAdd(String path, Callback callBack);
+    }
+    public interface Callback{
+        void onTaskFinish(boolean success);
+    }
+    public interface LeforeDelListener{
+        void onBeforeDel(int position, String path, Callback callBack);
     }
 }

@@ -40,10 +40,15 @@ public class SelectPictureGridView extends GridView {
         ChoosePhotoListAdapter adapter = (ChoosePhotoListAdapter) getAdapter();
         adapter.maxSize = maxSize;
     }
+    public void setListener(ChoosePhotoListAdapter.LeforeAddListener beforeAddListener, ChoosePhotoListAdapter.LeforeDelListener beforeDelListener){
+        ChoosePhotoListAdapter adapter = (ChoosePhotoListAdapter) getAdapter();
+        adapter.setListener(beforeAddListener, beforeDelListener);
+    }
 
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-       /* int expandSpec = MeasureSpec.makeMeasureSpec(
+/*
+        int expandSpec = MeasureSpec.makeMeasureSpec(
                 Integer.MAX_VALUE >> 2, MeasureSpec.AT_MOST);
         super.onMeasure(widthMeasureSpec, expandSpec);*/
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
