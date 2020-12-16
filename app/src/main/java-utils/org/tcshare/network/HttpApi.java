@@ -164,7 +164,8 @@ public class HttpApi {
             headersBuilder.removeAll(entry.getKey());
         }
         RequestBuilderFactory.setHeaders(Headers.of(map));
-    }/**
+    }
+    /**
      * 移除header键值对
      * @param name
      */
@@ -275,6 +276,15 @@ public class HttpApi {
 
     public static <T extends AResponse> void post(String url, Map<String, String> params, File[] files, T callBack) {
         post(url, params, Arrays.asList(files), callBack);
+    }
+
+    public static <T extends AResponse> void del(String url, T callBack) {
+        del(url, null, callBack);
+    }
+
+    public static <T extends AResponse> void del(String url,Map<String, String> params, T callBack) {
+        Request.Builder delRequestBuilder = RequestBuilderFactory.createDelRequestBuilder(url, params);
+        sendRequest(delRequestBuilder.build(), callBack);
     }
 
 

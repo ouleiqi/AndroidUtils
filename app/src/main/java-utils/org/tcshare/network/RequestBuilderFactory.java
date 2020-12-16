@@ -58,7 +58,17 @@ public class RequestBuilderFactory {
                                     .tag(UUID.randomUUID())
                                     .post(builder.build()).headers(headers);
     }
-
+    public static Request.Builder createDelRequestBuilder(String targetUrl, Map<String, String> map) {
+        FormBody.Builder builder = new FormBody.Builder();
+        if(map != null) {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                builder.add(entry.getKey(), entry.getValue());
+            }
+        }
+        return new Request.Builder().url(targetUrl)
+                .tag(UUID.randomUUID())
+                .delete(builder.build()).headers(headers);
+    }
 
     /**
      * post 表单，多个字段
