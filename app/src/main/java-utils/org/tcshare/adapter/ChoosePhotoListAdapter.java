@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import org.tcshare.utils.SelectOnePicture;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * yuxiaohei
@@ -44,7 +46,7 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
     public int maxSize = 9;
     private LayoutInflater mInflater;
     private Context context;
-    private List<String> list = new ArrayList<>();
+    private List<Pair<String, Object>> list = new ArrayList<>();
     private LeforeAddListener beforeAddListener;
     private LeforeDelListener beforeDelListener;
 
@@ -67,7 +69,7 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
     }
 
     @Override
-    public String getItem(int position) {
+    public Pair<String, Object> getItem(int position) {
 
         return list.get(position);
     }
@@ -77,9 +79,14 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
         return position;
     }
 
-    public void setData(List<String> list) {
+    public void setData(List<String> lt) {
         this.list.clear();
-        this.list.addAll(list);
+        lt.forEach(new Consumer<String>() {
+            @Override
+            public void accept(String s) {
+                list.add(Pair.create(s, null));
+            }
+        });
         notifyDataSetChanged();
     }
 
@@ -107,7 +114,7 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
                 holder.item_show_photo.setVisibility(View.VISIBLE);
                 holder.item_del_photo.setVisibility(View.VISIBLE);
                 Glide.with(context)
-                        .load(new File(list.get(position)))
+                        .load(new File(list.get(position).first))
                         .into(holder.item_show_photo);
             }
         } else {
@@ -115,7 +122,7 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
             holder.item_show_photo.setVisibility(View.VISIBLE);
             holder.item_add_photo.setVisibility(View.GONE);
             Glide.with(context)
-                    .load(new File(list.get(position)))
+                    .load(new File(list.get(position).first))
                     .into(holder.item_show_photo);
         }
         holder.item_add_photo.setOnClickListener(new View.OnClickListener() {
@@ -131,14 +138,14 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
                             int pos = list.size();
                             beforeAddListener.onBeforeAdd(pos, path, new Callback() {
                                 @Override
-                                public void onTaskFinish(boolean success) {
+                                public void onTaskFinish(boolean success, Object userObj) {
                                     if(!success) return;
-                                    list.add(path);
+                                    list.add(Pair.create(path, userObj));
                                     notifyDataSetChanged();
                                 }
                             });
                         }else{
-                            list.add(path);
+                            list.add(Pair.create(path, null));
                             notifyDataSetChanged();
                         }
 
@@ -156,9 +163,10 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 if(beforeDelListener != null){
-                                    beforeDelListener.onBeforeDel(position, list.get(position), new Callback() {
+                                    Pair<String, Object> item = list.get(position);
+                                    beforeDelListener.onBeforeDel(position, item.first, item.second, new Callback() {
                                         @Override
-                                        public void onTaskFinish(boolean success) {
+                                        public void onTaskFinish(boolean success,  Object userObj) {
                                             if(!success) return;
                                             list.remove(position);
                                             notifyDataSetChanged();
@@ -184,7 +192,14 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
     }
 
     public List<String> getPicList() {
-        return list;
+        List<String> result = new ArrayList<>();
+        list.forEach(new Consumer<Pair<String, Object>>() {
+            @Override
+            public void accept(Pair<String, Object> stringObjectPair) {
+                result.add(stringObjectPair.first);
+            }
+        });
+        return result;
     }
 
     public void clear() {
@@ -201,9 +216,9 @@ public class ChoosePhotoListAdapter extends BaseAdapter {
         void onBeforeAdd(int pos, String path, Callback callBack);
     }
     public interface Callback{
-        void onTaskFinish(boolean success);
+        void onTaskFinish(boolean success,  Object userObj);
     }
     public interface LeforeDelListener{
-        void onBeforeDel(int pos, String path, Callback callBack);
+        void onBeforeDel(int pos, String path,Object userObj, Callback callBack);
     }
 }
