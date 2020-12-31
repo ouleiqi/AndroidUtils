@@ -16,6 +16,7 @@ import org.tcshare.app.amodule.fragment.EmptyFragment;
 import org.tcshare.app.amodule.fragment.RVListFragment;
 import org.tcshare.fragment.WebViewFragment;
 import org.tcshare.permission.PermissionHelper;
+import org.tcshare.utils.RS485SerialPortUtilNew;
 import org.tcshare.utils.RandomUtils;
 import org.tcshare.utils.ToastUtil;
 import org.tcshare.widgets.BottomListDialog;

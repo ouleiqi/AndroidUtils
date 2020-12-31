@@ -10,7 +10,8 @@ public class RS485SerialPort {
      * 注意使用system命令会有延时，需要设置从设备的延时时间， （CPU越快计时越精确）
      *
      * @param devPath 串口设备树
-     * @param enableIO 使能节点，示例：无内核驱动， echo (1|0) > /sys/class/gpioXXX/value 有内核驱动 /dev/gpioXXX
+     * @param enableIO 使能节点，示例：无内核驱动， echo (1|0) > /sys/class/gpioXXX/value 有内核驱动 /dev/gpioXXX;
+     *                 如果芯片带有自动转换，则传入null（当作普通串口）
      * @param baudRate 波特率
      * @param flags 打开标识
      * @param hasDriver 是否同时修改了内核驱动，无 false，

@@ -109,31 +109,38 @@ int parity = 'N';
 int stopBits = 1;
 
 bool kernelHasDriver;
+bool autoSend = false;
 extern "C"
 JNIEXPORT jint JNICALL
 Java_org_tcshare_utils_RS485SerialPort_open(JNIEnv *env, jobject type, jstring devPath,
                                             jstring enableIO, jint baudRate, jint flags, jboolean hasDriver) {
-    const char *enable_io = env->GetStringUTFChars(enableIO, JNI_FALSE);
-    memset(enableSend, 0, sizeof(enableSend));
-    memset(enableRecv, 0, sizeof(enableRecv));
-    sprintf(enableSend, "%s%s", ECHO_1, enable_io);
-    sprintf(enableRecv, "%s%s", ECHO_0, enable_io);
-    env->ReleaseStringUTFChars(enableIO, enable_io);
+    if (enableIO != nullptr) {
+        const char *enable_io = env->GetStringUTFChars(enableIO, JNI_FALSE);
+        memset(enableSend, 0, sizeof(enableSend));
+        memset(enableRecv, 0, sizeof(enableRecv));
+        sprintf(enableSend, "%s%s", ECHO_1, enable_io);
+        sprintf(enableRecv, "%s%s", ECHO_0, enable_io);
+        env->ReleaseStringUTFChars(enableIO, enable_io);
+        if(DEBUG) LOGD("enSend: %s", enableSend);
+        if(DEBUG) LOGD("enRecv: %s", enableRecv);
 
-    kernelHasDriver = (hasDriver == JNI_TRUE);
-
-    if(DEBUG) LOGD("enSend: %s", enableSend);
-    if(DEBUG) LOGD("enRecv: %s", enableRecv);
-
-    if(kernelHasDriver){
-        FD_IO=open(enable_io,O_RDWR);
-        if(FD_IO == -1)
-        {
-            LOGE("can't open gpio ");
-            return -1;
+        kernelHasDriver = (hasDriver == JNI_TRUE);
+        if(kernelHasDriver){
+            FD_IO=open(enable_io,O_RDWR);
+            if(FD_IO == -1)
+            {
+                LOGE("can't open gpio ");
+                return -1;
+            }
+            LOGD("open( %s ) fd = %d", enable_io, FD_IO);
         }
-        LOGD("open( %s ) fd = %d", enable_io, FD_IO);
+    } else{
+        autoSend = true;
     }
+
+
+
+
 
     speed_t speed;
     /* 检查波特率 */
@@ -434,7 +441,7 @@ int sendWaitRecv(int fd, char *sendBuf, int sendLen, char *revBuf, int readMaxLe
         int gpioONValue;
         ioctl(FD_IO,GPIO_ON, &gpioONValue) ;
         if (DEBUG) LOGI("GPIO_ON");
-    }else{
+    }else if(!autoSend){
         int ret = system(enableSend);
         if(DEBUG) LOGI("enableSend %s %d", enableSend, ret);
     }
@@ -455,7 +462,7 @@ int sendWaitRecv(int fd, char *sendBuf, int sendLen, char *revBuf, int readMaxLe
        // usleep(30*1000);
         ioctl(FD_IO, GPIO_OFF, &gpioOFFValue);
         if (DEBUG) LOGI("GPIO_OFF");
-    }else{
+    }else if(!autoSend){
         int ret = system(enableRecv);
         if (DEBUG) LOGI("enableRecv %s %d", enableRecv, ret);
     }

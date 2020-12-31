@@ -14,6 +14,7 @@ import java.util.concurrent.PriorityBlockingQueue;
  * 程序读发送寄存器，保证发送完成后，再使能接收<br/>
  * 1. 如果内核有gpio的驱动则使用ioctl <br/>
  * 2. 如果内核没有驱动则使用system(echo > 1 /sys/class/gpio/value)来设置
+ * 3. 如果带有自动转换的芯片，则使能路径传null
  */
 public class RS485SerialPortUtilNew {
     private static final String TAG = RS485SerialPortUtilNew.class.getSimpleName();
@@ -27,14 +28,20 @@ public class RS485SerialPortUtilNew {
     private WriteReadThread mWriteReadThread;
     private boolean isOpenSerialSuccess;
     private LinkedBlockingQueue<RSCallback> rsBlockingQueue;
-    private static final long waitSlaverTime = 100; // 使用等待从机模式， 从机释放总线可能比较慢, ms
+    private long waitSlaverTime = 100; // 使用等待从机模式， 从机释放总线可能比较慢, ms
+    private boolean sending = false;
 
     public RS485SerialPortUtilNew() {
-        this(Integer.MAX_VALUE);
+        this(Integer.MAX_VALUE, 100);
     }
 
-    public RS485SerialPortUtilNew(int queueSize) {
+    public RS485SerialPortUtilNew(int queueSize, long waitSlaverTime) {
         rsBlockingQueue = new LinkedBlockingQueue<>(queueSize);
+        this.waitSlaverTime = waitSlaverTime;
+    }
+
+    public RS485SerialPortUtilNew(long waitSlaverTime) {
+        this(Integer.MAX_VALUE,waitSlaverTime);
     }
 
 
@@ -44,16 +51,18 @@ public class RS485SerialPortUtilNew {
      * @param rs485Path 使能收发节点
      * @param hasDriver 如果有内核驱动， 请先注销掉对应接口！， 否则会导致打不开； 注销示例：  echo 68 > /sys/class/gpio/unexport
      */
-    public void open(int band, @NonNull String port, @NonNull String rs485Path, boolean hasDriver) {
+    public void open(int band, @NonNull String port, String rs485Path, boolean hasDriver) {
         try {
             // 注意要让APP拥有ROOT 权限
             String cmdPort = "chmod 777 " + port;
             ShellUtils.CommandResult cmdPortResult = ShellUtils.execCommand(cmdPort, true);
             Log.d(TAG, String.format("exe command: %s result %s", cmdPort, cmdPortResult.toString()));
 
-            String cmdEnable = "chmod 777 " + rs485Path;
-            ShellUtils.CommandResult cmdEnableResult = ShellUtils.execCommand(cmdEnable, true);
-            Log.d(TAG, String.format("exe command: %s result %s", cmdEnable, cmdEnableResult.toString()));
+            if(rs485Path != null) {
+                String cmdEnable = "chmod 777 " + rs485Path;
+                ShellUtils.CommandResult cmdEnableResult = ShellUtils.execCommand(cmdEnable, true);
+                Log.d(TAG, String.format("exe command: %s result %s", cmdEnable, cmdEnableResult.toString()));
+            }
 
             int result = rs485SerialPort.open(port, rs485Path, band, 0, hasDriver);
             mWriteReadThread = new WriteReadThread();
@@ -103,6 +112,24 @@ public class RS485SerialPortUtilNew {
     }
 
     /**
+     * 同步发送
+     * @param sendArray
+     * @param revBufSize
+     * @param readWaitTime
+     */
+    public synchronized byte[] sendDataSync(byte[] sendArray, int revBufSize, int readWaitTime) {
+        sending = true;
+        byte[] recBytes = rs485SerialPort.send(sendArray, revBufSize, readWaitTime);
+        sending = false;
+        if(waitSlaverTime > 0){
+            try {
+                Thread.sleep(waitSlaverTime);
+            }catch (Exception e){ }
+        }
+        return recBytes;
+    }
+
+    /**
      * @param cb
      */
     public void sendDataInsertHead(@NonNull final RSCallback cb) {
@@ -144,7 +171,13 @@ public class RS485SerialPortUtilNew {
                 try {
                     RSCallback obj ;
                     while ((obj = rsBlockingQueue.poll()) == null){
-                        rs485SerialPort.drain(1);
+                        if(!sending) { // 同步发送，则不drain, 休眠1ms
+                            rs485SerialPort.drain(1);
+                        }else{
+                            try {
+                                Thread.sleep(1);
+                            }catch (Exception e){ }
+                        }
                     }
                     if(obj.sendBytes.length == 0){
                         obj.onReceiveFinish(null);
@@ -160,21 +193,6 @@ public class RS485SerialPortUtilNew {
                             }catch (Exception e){ }
                         }
                     }
-                /*    RSCallback obj = rsBlockingQueue.take();
-                    if(obj.sendBytes.length == 0){
-                        obj.onReceiveFinish(null);
-                    }else {
-                        Log.e(TAG, "------send Bytes: " + HexDump.toHexString(obj.sendBytes));
-                        byte[] recBytes = rs485SerialPort.send(obj.sendBytes, obj.recBufLen, obj.waitTime);
-                        Log.e(TAG, "------recv Bytes: " + (recBytes == null ? "null " : HexDump.toHexString(recBytes)));
-                        obj.onReceiveFinish(recBytes);
-
-                        if(waitSlaverTime > 0){
-                            try {
-                                Thread.sleep(waitSlaverTime);
-                            }catch (Exception e){ }
-                        }
-                    }*/
 
                 } catch (Exception e) {
                     e.printStackTrace();
