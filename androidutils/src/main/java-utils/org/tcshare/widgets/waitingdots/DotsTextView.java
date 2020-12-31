@@ -13,7 +13,7 @@ import android.text.Spanned;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import org.tcshare.app.R;
+import org.tcshare.androidutils.R;
 
 public class DotsTextView extends TextView {
 

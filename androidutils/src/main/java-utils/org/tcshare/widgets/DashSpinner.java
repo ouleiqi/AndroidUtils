@@ -22,7 +22,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
-import org.tcshare.app.R;
+import org.tcshare.androidutils.R;
 
 
 /**

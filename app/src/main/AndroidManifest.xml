@@ -39,23 +39,7 @@
             android:name=".amodule.activity.TCLiveLikeActivity"
             android:theme="@style/MyAppTheme.NoActionBar.Translucent" />
         <activity android:name=".zxing.CaptureActivity" />
-        <!-- utils 模块 -->
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider>
 
-        <activity
-            android:name="org.tcshare.activity.TCRequestPermissionActivity"
-            android:theme="@style/Theme.Transparent" />
-        <activity
-            android:name="org.tcshare.activity.TCSelectOnePictureActivity"
-            android:theme="@style/Theme.Transparent" />
     </application>
 
 </manifest>

@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import org.tcshare.app.R;
+import org.tcshare.androidutils.R;
 import org.tcshare.utils.ImmerseUtil;
 
 /**

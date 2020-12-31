@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "org.tcshare.app"
-        minSdkVersion 24
+        minSdkVersion 22
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -33,15 +33,10 @@ android {
 
     sourceSets {
         main {
-            java.srcDirs = ['src/main/java-public', 'src/main/java-utils', 'src/main/java-zxing']
-            res.srcDirs = ['src/main/res-utils', 'src/main/res-public', 'src/main/res-zxing']
+            java.srcDirs = ['src/main/java-public',  'src/main/java-zxing']
+            res.srcDirs = [ 'src/main/res-public', 'src/main/res-zxing']
             jniLibs.srcDirs = ['src/main/jni-libs-public']
-            assets.srcDirs = ['src/main/assets-utils', 'src/main/assets-public']
-        }
-    }
-    externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"
+            assets.srcDirs = [ 'src/main/assets-public']
         }
     }
 
@@ -58,12 +53,6 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation "androidx.constraintlayout:constraintlayout:2.0.4"
 
-    implementation "androidx.appcompat:appcompat:1.3.0-alpha02"
-    implementation "com.google.android.material:material:1.3.0-alpha03"
-
-    implementation "com.squareup.okhttp3:okhttp:3.14.2"
-    implementation "com.google.code.gson:gson:2.8.6"
-
     implementation 'com.google.zxing:core:3.4.0'
-    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    implementation project(path: ':androidutils')
 }

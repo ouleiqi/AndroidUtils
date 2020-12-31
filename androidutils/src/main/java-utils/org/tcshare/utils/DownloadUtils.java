@@ -21,7 +21,7 @@ import androidx.core.content.FileProvider;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import org.tcshare.app.R;
+import org.tcshare.androidutils.R;
 import org.tcshare.permission.PermissionHelper;
 
 import java.io.File;

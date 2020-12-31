@@ -17,7 +17,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.tcshare.app.R;
+import org.tcshare.androidutils.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

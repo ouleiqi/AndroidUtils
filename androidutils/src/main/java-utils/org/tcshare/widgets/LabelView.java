@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 
-import org.tcshare.app.R;
+import org.tcshare.androidutils.R;
 
 
 public class LabelView extends View {

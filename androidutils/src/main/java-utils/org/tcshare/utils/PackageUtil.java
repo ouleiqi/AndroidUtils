@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.widget.Toast;
 
-import org.tcshare.app.R;
+import org.tcshare.androidutils.R;
 
 /**
  * Created by FallRain on 2017/7/3.

@@ -31,7 +31,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.bumptech.glide.Glide;
 
-import org.tcshare.app.R;
+import org.tcshare.androidutils.R;
 import org.tcshare.utils.SelectOnePicture;
 
 import java.io.File;

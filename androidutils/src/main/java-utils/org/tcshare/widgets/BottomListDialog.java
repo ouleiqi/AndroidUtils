@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import org.tcshare.app.R;
+import org.tcshare.androidutils.R;
 
 /**
  * Created by yuxiaohei on 2018/3/13.

@@ -15,7 +15,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
-import org.tcshare.app.R;
+import org.tcshare.androidutils.R;
 
 import androidx.appcompat.widget.AppCompatImageView;
 

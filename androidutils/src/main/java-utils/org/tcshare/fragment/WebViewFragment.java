@@ -25,7 +25,7 @@ import java.util.Map;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import org.tcshare.app.R;
+import org.tcshare.androidutils.R;
 
 /**
  * 优先加载 url ，没有url 则加载 content

@@ -14,7 +14,7 @@ import android.view.ViewConfiguration;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 
-import org.tcshare.app.R;
+import org.tcshare.androidutils.R;
 
 
 public class SwipeMenuLayout extends FrameLayout {

@@ -18,7 +18,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import org.tcshare.app.R;
+import org.tcshare.androidutils.R;
 import org.tcshare.utils.DensityUtil;
 import org.tcshare.utils.RandomUtils;
 

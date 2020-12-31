@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import org.tcshare.app.R;
+import org.tcshare.androidutils.R;
 import org.tcshare.dialog.LoadingDialog;
 
 import java.io.IOException;
