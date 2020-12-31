@@ -17,6 +17,7 @@
 #include <cstdlib>
 
 static const char *TAG = "RS485Serial";
+#define LOGV(fmt, args...) __android_log_print(ANDROID_LOG_VERBOSE,  TAG, fmt, ##args)
 #define LOGI(fmt, args...) __android_log_print(ANDROID_LOG_INFO,  TAG, fmt, ##args)
 #define LOGD(fmt, args...) __android_log_print(ANDROID_LOG_DEBUG, TAG, fmt, ##args)
 #define LOGE(fmt, args...) __android_log_print(ANDROID_LOG_ERROR, TAG, fmt, ##args)
@@ -388,12 +389,38 @@ int rsRead(int fd, char *buf, int MaxLen, int waitTime) {
         }
     }
 
-   if(DEBUG) LOGI("uart_read len:%d \n%s\n", len, buf);
+   if(DEBUG) LOGI("uart_read len:%d \n", len);
 
     return len;
 
 }
+extern "C"
+JNIEXPORT jint JNICALL
+Java_org_tcshare_utils_RS485SerialPort_drain(JNIEnv *env, jobject thiz, jint time) {
+    int len = 0, nRet = 0;
+    struct pollfd stPoll[1];
+    int revBufSize = 128;
+    char recvbuf[revBufSize];
+    
+    stPoll[0].fd = FD;
+    stPoll[0].events = POLLIN;
 
+    if (poll(stPoll, 1, time) > 0)           //如果接收不到返回数据，返回错误
+    {
+        len = 0;
+        while (len < revBufSize) {
+            nRet = read(FD, (recvbuf + len), 1);
+            if (nRet <= 0) {
+                break;
+            }
+            len += nRet;
+        }
+    }
+
+    if(/*DEBUG && */len > 0) LOGD("drain len :%d \n", len);
+
+    return len;
+}
 
 //485发送接收函数
 int sendWaitRecv(int fd, char *sendBuf, int sendLen, char *revBuf, int readMaxLen, int readWaitTime) {
@@ -425,6 +452,7 @@ int sendWaitRecv(int fd, char *sendBuf, int sendLen, char *revBuf, int readMaxLe
     if (kernelHasDriver) {
         // usleep(500*1000);//test
         int gpioOFFValue;
+       // usleep(30*1000);
         ioctl(FD_IO, GPIO_OFF, &gpioOFFValue);
         if (DEBUG) LOGI("GPIO_OFF");
     }else{
